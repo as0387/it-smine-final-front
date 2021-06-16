@@ -41,6 +41,7 @@ function LoginPage() {
   };
 
   return (
+    <div>
     <Form
       id="login-form"
       name="normal_login"
@@ -90,44 +91,45 @@ function LoginPage() {
           로그인
         </Button>
         회원이 아니신가요? <a href="/register"> 회원가입</a>
-        <hr />
-        <Button
-          className="social-area"
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-        >
-          로그인
-        </Button>
-        <hr />
-        <Button
-          className="social-area"
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-        >
-          로그인
-        </Button>
-        <hr />
-        <Button
-          className="social-area"
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-        >
-          로그인
-        </Button>
-        <hr />
-        <Button
-          className="social-area"
-          type="primary"
-          htmlType="submit"
-          className="login-form-button"
-        >
-          로그인
-        </Button>
-      </Form.Item>
+        </Form.Item>
     </Form>
+    <div id="social-login">
+          <div>
+          <Button
+          className="social-area"
+          type="primary"
+          >
+            로그인
+          </Button>
+        </div>
+        
+        <div>
+          <Button
+          className="social-area"
+          type="primary"
+        >
+          로그인
+        </Button>
+        </div>
+    
+        <div>
+          <Button
+          className="social-area"
+          type="primary"
+        >
+          로그인
+        </Button>
+        </div>
+        <div>
+          <Button
+          className="social-area"
+          type="primary"
+        >
+          로그인
+        </Button>
+          </div>
+        </div>
+    </div>
   );
 }
 
