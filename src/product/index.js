@@ -5,6 +5,7 @@ import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
 import { Button, message } from "antd";
+import ProductCard from "../components/productCard";
 
 const config = {
   headers: { Authorization: localStorage.getItem("Authorization") },
@@ -13,6 +14,7 @@ const config = {
 function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
 
   const getProduct = () => {
     axios
@@ -26,8 +28,20 @@ function ProductPage() {
       });
   };
 
+  const getRecommendations = () => {
+        axios.get(`http://localhost:8080/products/${id}/recommendation`)
+        .then((result) => {
+            setProducts(result.data.products);
+            console.log(result.data.products);
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+    }
+
   useEffect(function () {
     getProduct();
+    getRecommendations();
   }, []);
 
   if (product === null) {
@@ -74,7 +88,20 @@ function ProductPage() {
         </Button>
         <pre id="description">{product.description}</pre>
       </div>
+      <div>
+                    <h1>추천 상품</h1>
+                    <div style={{display:'flex',flexWrap : 'wrap'}}>
+                    {
+                        products.map((product, index) => {
+                            return (
+                                <ProductCard key={index} product={product} />
+                            )
+                        })
+                    }
+                    </div>
+                </div>
     </div>
+    
   );
 }
 
