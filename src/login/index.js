@@ -1,4 +1,4 @@
-import { Form, Input, Checkbox, Button, message } from "antd";
+import { Form, Input, Checkbox, Button, message, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./index.css";
 import axios from "axios";
@@ -95,14 +95,11 @@ function LoginPage() {
     </Form>
     <div id="social-login">
           <div>
-          <Button
-          className="social-area"
-          type="primary"
-          >
-            로그인
-          </Button>
-        </div>
-        
+          <a className="social-area">
+            <img src="/images/icons/kakao.png"/>
+          </a>
+          </div>
+
         <div>
           <Button
           className="social-area"
