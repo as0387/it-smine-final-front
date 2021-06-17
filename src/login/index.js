@@ -31,7 +31,7 @@ function LoginPage() {
           dispatch(login());
           history.replace("/");
         } else {
-          alert("아이디 혹은 비번을 다시 입력하세요!");
+          message.error("아이디 혹은 비번을 다시 입력하세요!");
         }
       })
       .catch((error) => {
@@ -97,9 +97,8 @@ function LoginPage() {
           <div>
           <a className="social-area">
             <img src="/images/icons/kakao.png"/>
-          </a>
+          </a> 
           </div>
-
         <div>
           <Button
           className="social-area"
