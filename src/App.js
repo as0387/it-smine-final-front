@@ -6,7 +6,7 @@ import ProductPage from "./product";
 import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
-import { Button } from "antd";
+import { Button, Affix } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { login, logout } from "./store";
@@ -31,7 +31,9 @@ function App() {
   }, []);
 
   return (
+    
     <div>
+      <Affix offsetTop={0}>
       <div id="header">
         <div id="header-area">
           <Link to="/">
@@ -54,7 +56,9 @@ function App() {
                   로그아웃
                 </Button>
               </div>
+              
             </>
+            
           ) : (
             <>
               <div>
@@ -81,6 +85,8 @@ function App() {
           )}
         </div>
       </div>
+      </Affix>
+      
       <div id="body">
         <Switch>
           <Route exact={true} path="/">

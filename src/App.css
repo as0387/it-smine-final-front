@@ -14,6 +14,7 @@ body,
   display: flex;
   justify-content: center;
   border-bottom: 1px solid gray;
+  background-color: white;
 }
 
 #header-area {
