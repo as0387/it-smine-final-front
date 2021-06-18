@@ -20,6 +20,7 @@ const config = {
 
 function UploadPage() {
   const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl2, setImageUrl2] = useState(null);
   const history = useHistory();
 
   const onSubmit = (values) => {
@@ -29,11 +30,28 @@ function UploadPage() {
         {
           title: values.title,
           description: values.description,
-          seller: values.seller,
           price: parseInt(values.price),
           imageUrl: imageUrl,
         },
         config
+      )
+      .then((result) => {
+        console.log(result);
+        history.replace("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        message.error(`에러가 발생했습니다. ${error.message}`);
+      });
+    axios
+      .post(
+        `http://localhost:8080/products`,
+        {
+          title: values.title,
+          description: values.description,
+          price: parseInt(values.price),
+          imageUrl: imageUrl2,
+        },
       )
       .then((result) => {
         console.log(result);
@@ -50,10 +68,20 @@ function UploadPage() {
       return;
     }
     if (info.file.status === "done") {
-      console.log(info.file);
       const imageUrl = info.file.response;
-      console.log(imageUrl);
       setImageUrl(imageUrl);
+    }
+  };
+
+  const onChangeImage2 = (info) => {
+    console.log(info.file.status);
+    if (info.file.status === "uploading") {
+      return;
+    }
+    if (info.file.status === "done") {
+      const response = info.file.response;
+      const imageUrl2 = response.imageUrl;
+      setImageUrl2(imageUrl2);
     }
   };
   return (
@@ -64,7 +92,7 @@ function UploadPage() {
           label={<div className="upload-label">상품 사진</div>}
         >
           <Upload
-            name="file"
+            name="image"
             action={`${API_URL}/image`}
             listType="picture"
             showUploadList={false}
@@ -80,19 +108,29 @@ function UploadPage() {
             )}
           </Upload>
         </Form.Item>
-        {/* <Divider />
+
         <Form.Item
-          label={<div className="upload-label">판매자 명</div>}
-          name="seller"
-          rules={[{ required: true, message: "판매자 이름을 입력해주세요." }]}
+          name="upload"
+          label={<div className="upload-label">상품 사진</div>}
         >
-          <Input
-            className="upload-name"
-            size="large"
-            placeholder="이름을 입력해주세요."
-          ></Input>
+          <Upload
+            name="image"
+            action={`http://localhost:8080/image`}
+            listType="picture"
+            showUploadList={false}
+            onChange={onChangeImage2}
+          >
+            {imageUrl2 ? (
+              <img id="upload-img" src={`http://localhost:8080/${imageUrl2}`} />
+            ) : (
+              <div id="upload-img-placeholder">
+                <img src="/images/icons/camera.png"></img>
+                <span>이미지를 업로드해주세요.</span>
+              </div>
+            )}
+          </Upload>
         </Form.Item>
-        <Divider /> */}
+
         <Form.Item
           name="title"
           label={<div className="upload-label">상품 이름</div>}

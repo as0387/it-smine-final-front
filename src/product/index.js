@@ -42,7 +42,7 @@ function ProductPage() {
   useEffect(function () {
     getProduct();
     getRecommendations();
-  }, []);
+  }, [id]);
 
   if (product === null) {
     return <h1>상품 정보를 받고 있습니다...</h1>;

@@ -54,7 +54,37 @@ function MainPage() {
       <div id="product-list">
         {products.map(function (product, index) {
           return (
-            <ProductCard product={product} key={index} />
+            <div className="product-card">
+              {product.soldout === 1 && <div className="product-blur" />}
+              <Link className="product-link" to={`/products/${product.id}`}>
+                <div>
+                  <img
+                    className="product-img"
+                    src={`${API_URL}${product.imageUrl}`}
+                  />
+                </div>
+                <div className="product-contents">
+                  <span className="product-name">
+                    <span>{product.title}</span>
+                  </span>
+                  <span className="product-price">
+                    <span>{product.price}원</span>
+                  </span>
+                  <div className="product-footer">
+                    <div className="product-seller">
+                      <img
+                        className="product-avatar"
+                        src="images/icons/avatar.png"
+                      />
+                      <span>{product.user.username}</span>
+                    </div>
+                    <span className="product-date">
+                      {dayjs(product.createDate).fromNow()}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
           );
         })}
       </div>
