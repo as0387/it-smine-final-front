@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
 * {
   line-height: normal;
+  font-family: 'Jua', sans-serif;
 }
 
 html,
@@ -15,6 +18,7 @@ body,
   justify-content: center;
   border-bottom: 1px solid gray;
   background-color: white;
+  
 }
 
 #header-area {
