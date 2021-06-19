@@ -2,6 +2,7 @@ import "antd/dist/antd.css";
 import "./App.css";
 import MainPageComponent from "./main/index.js";
 import UploadPage from "./upload";
+import AuctionUpload from "./auctionupload";
 import ProductPage from "./product";
 import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
@@ -18,16 +19,20 @@ function App() {
   const dispatch = useDispatch();
 
   const isLogin = useSelector((store) => store.isLogin);
-  const onClick= function () {
+  const upload= function () {
                     history.push("/upload");
                   }
+  const auctionupload = () => {
+    history.push("/auctionupload")
+  }
+                  
   // 
   const menu = (
   <Menu >
-    <Menu.Item onClick={onClick} key="1" icon={<PlusOutlined />}>
+    <Menu.Item onClick={upload} key="1" icon={<PlusOutlined />}>
       일반상품
     </Menu.Item>
-    <Menu.Item key="2" icon={<PlusOutlined />}>
+    <Menu.Item onClick={auctionupload} key="2" icon={<PlusOutlined />}>
       경매상품
     </Menu.Item>
   </Menu>
@@ -112,6 +117,9 @@ function App() {
           </Route>
           <Route exact={true} path="/upload">
             <UploadPage />
+          </Route>
+          <Route exact={true} path="/auctionupload">
+            <AuctionUpload />
           </Route>
           <Route exact={true} path="/login">
             <LoginPage />
