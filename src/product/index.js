@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
-import { Button, message } from "antd";
+import { Button, message ,Spin, Space} from "antd";
 import ProductCard from "../components/productCard";
 
 const config = {
@@ -45,7 +45,13 @@ function ProductPage() {
   }, [id]);
 
   if (product === null) {
-    return <h1>상품 정보를 받고 있습니다...</h1>;
+    return <div>
+    <Space size="middle">
+    <Spin size="small" />
+    <Spin />
+    <Spin size="large" />
+  </Space>
+  </div>
   }
 
   const onClickPurchase = () => {
@@ -87,6 +93,8 @@ function ProductPage() {
           재빨리 구매하기
         </Button>
         <pre id="description">{product.description}</pre>
+
+
       </div>
       <div>
                     <h1>추천 상품</h1>
