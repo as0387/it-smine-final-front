@@ -30,8 +30,10 @@ function AuctionUpload() {
         {
           title: values.title,
           description: values.description,
-          price: parseInt(values.price),
+          bidLimit: parseInt(values.bidLimit),
+          bid: parseInt(values.bid),
           imageUrl: imageUrl,
+          type: 1,
         },
         config
       )
@@ -44,15 +46,12 @@ function AuctionUpload() {
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
     axios
-      .post(
-        `http://localhost:8080/products`,
-        {
-          title: values.title,
-          description: values.description,
-          price: parseInt(values.price),
-          imageUrl: imageUrl2,
-        },
-      )
+      .post(`http://localhost:8080/products`, {
+        title: values.title,
+        description: values.description,
+        price: parseInt(values.price),
+        imageUrl: imageUrl2,
+      })
       .then((result) => {
         console.log(result);
         history.replace("/");
@@ -107,12 +106,6 @@ function AuctionUpload() {
               </div>
             )}
           </Upload>
-        </Form.Item>
-
-        <Form.Item
-          name="upload"
-          label={<div className="upload-label">상품 사진</div>}
-        >
           <Upload
             name="image"
             action={`http://localhost:8080/image`}
@@ -146,11 +139,9 @@ function AuctionUpload() {
         <Form.Item
           name="endtime"
           label={<div className="upload-label">경매마감시간 설정</div>}
-        >
-
-        </Form.Item>
+        ></Form.Item>
         <Form.Item
-          name="startprice"
+          name="bid"
           label={<div className="upload-label">경매시작가</div>}
           rules={[{ required: true, message: "상품 가격을 입력해주세요" }]}
         >
@@ -161,7 +152,7 @@ function AuctionUpload() {
           ></InputNumber>
         </Form.Item>
         <Form.Item
-          name="endprice"
+          name="bidLimit"
           label={<div className="upload-label">상한가</div>}
           rules={[{ required: true, message: "상품 가격을 입력해주세요" }]}
         >

@@ -1,85 +1,83 @@
 #image-box {
-    max-height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  max-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #image-box > img {
-    max-height: 300px;
-    width: 100%;
-    object-fit: contain;
+  max-height: 300px;
+  width: 100%;
+  object-fit: contain;
 }
 
 #profile-box {
-    padding: 16px;
-    margin-top: 8px;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  padding: 16px;
+  margin-top: 8px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #profile-box > div > img {
-    width: 50px;
-    height: 50px;
+  width: 50px;
+  height: 50px;
 }
 
 #profile-box > span {
-    font-size: 15px;
-    margin-left: 8px;
-    font-weight: 600;
-    
+  font-size: 15px;
+  margin-left: 8px;
+  font-weight: 600;
 }
 
 #contents-box {
-    display: flex;
-    justify-content: space-between;
-    padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
 }
 #name {
-    font-size: 20px;
-    font-weight: 400;
+  font-size: 40px;
+  font-weight: 400;
 }
 
 #price {
-    font-size: 16px;
-    font-weight: 600;
+  font-size: 25px;
+  font-weight: 600;
 }
 
 #createdAt {
-    font-size: 12px;
-    color: rgb(204,204,204);
+  font-size: 12px;
+  color: rgb(204, 204, 204);
 }
 
 #description {
-    margin-top: 16px;
-    font-size: 16px;
+  margin-top: 16px;
+  font-size: 16px;
 }
 
 #purchase-button {
-    margin-top: 8px;
-    margin-bottom: 16px;
+  margin-top: 8px;
+  margin-bottom: 16px;
 }
 
 #change-button1 {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 #spin-spin {
-    display: absolute;
-    top: 50%;
-    left: 50%;
+  display: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 #auction-commit {
-
 }
 
 .upload-price {
-    width: 148px;
+  width: 148px;
 }
 
 #bill-button {
-    width: 250px;
+  width: 250px;
 }

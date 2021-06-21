@@ -1,17 +1,14 @@
-
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
-import { Button, message,InputNumber,Form, Spin, Space } from "antd";
+import { Button, message, InputNumber, Form, Spin, Space } from "antd";
 import ProductCard from "../components/productCard";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
 import Comment from "../comments/index";
-
-
 
 const config = {
   headers: { Authorization: localStorage.getItem("Authorization") },
@@ -28,7 +25,6 @@ function ProductPage() {
     axios
       .get(`${API_URL}/products/${id}`, config)
       .then((result) => {
-        console.log(result);
         setProduct(result.data);
       })
       .catch((error) => {
@@ -43,7 +39,6 @@ function ProductPage() {
       )
       .then((result) => {
         setProducts(result.data.products);
-        console.log(result.data.products);
       })
       .catch((error) => {
         console.error(error);
@@ -54,7 +49,6 @@ function ProductPage() {
     axios
       .delete(`${API_URL}/post/${id}`, config)
       .then((result) => {
-        console.log(result);
         alert("삭제완료");
         history.push("/");
       })
@@ -78,8 +72,36 @@ function ProductPage() {
         setuserId(jwt_decode(jwtToken).id);
       }
     },
-    [id]
+    [id, product]
   );
+
+  const bidPost = (values) => {
+    if (product.bid > parseInt(values.bid)) {
+      message.error(`입찰금액이 현재 가격보다 낮습니다...`);
+    } else {
+      axios
+        .put(
+          `${API_URL}/bidPost/${id}`,
+          {
+            title: product.title,
+            description: product.description,
+            bid: parseInt(values.bid),
+            bidderId: userId,
+            imageUrl: product.imageUrl,
+          },
+          config
+        )
+        .then((result) => {
+          console.log(result);
+          message.success("입찰되었습니다!");
+          history.replace(`/products/${id}`);
+        })
+        .catch((error) => {
+          console.error(error);
+          message.error(`에러가 발생했습니다. ${error.message}`);
+        });
+    }
+  };
 
   if (product === null) {
     return (
@@ -140,34 +162,43 @@ function ProductPage() {
 
       <div id="contents-box">
         <div>
-        <div id="name">{product.title}</div>
-        <div id="price">{product.price}원</div>
-        <div id="createdAt">
-          {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
-        </div>
-        {
-          !product.type ? (
+          <div id="name">{product.title}</div>
+          {product.type !== 1 ? (
+            <div id="price">{product.price}원</div>
+          ) : (
+            <div id="price">{product.bid}원</div>
+          )}
+
+          <div id="createdAt">
+            {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
+          </div>
+          {product.type === 1 ? (
             <div>
               <div>
                 <div id="auction-commit">
-                  <Form>
+                  <Form onFinish={bidPost}>
                     <Form.Item
-                    name="price"
-                    label={<div className="upload-label">입찰 가격</div>}
-                    rules={[{ required: true, message: "상품 가격을 입력해주세요" }]}
+                      name="bid"
+                      label={<div className="upload-label">입찰 가격(원)</div>}
+                      rules={[
+                        { required: true, message: "상품 가격을 입력해주세요" },
+                      ]}
                     >
-                    <InputNumber
-                      className="upload-price"
-                      size="large"
-                      defaultValue={0}
-                    ></InputNumber>
+                      <InputNumber
+                        className="upload-price"
+                        size="large"
+                        defaultValue={0}
+                      ></InputNumber>
                     </Form.Item>
                     <Button
-                    id="bill-button"
-                    size="large"
-                    type="primary"
-                    danger
-                    >입찰하기</Button>
+                      id="bill-button"
+                      size="large"
+                      type="primary"
+                      danger
+                      htmlType
+                    >
+                      입찰하기
+                    </Button>
                   </Form>
                 </div>
               </div>
@@ -176,30 +207,24 @@ function ProductPage() {
             <div>
               <div>
                 <Button
-                id="purchase-button"
-                size="large"
-                type="primary"
-                danger
-                onClick={onClickPurchase}
-                disabled={product.soldout === 1 ? true : false}
+                  id="purchase-button"
+                  size="large"
+                  type="primary"
+                  danger
+                  onClick={onClickPurchase}
+                  disabled={product.soldout === 1 ? true : false}
                 >
                   재빨리 구매하기
                 </Button>
               </div>
             </div>
-          )
-        }
-        
-        
-        <pre id="description">{product.description}</pre>
-        </div>
-        <div>
-          
-          
+          )}
+          <br />
+          <br />
+          <div id="price">상품 설명</div>
+          <pre id="description">{product.description}</pre>
         </div>
       </div>
-      
-      
       <div>
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -208,7 +233,7 @@ function ProductPage() {
           })}
         </div>
       </div>
-      <Comment/>
+      <Comment />
     </div>
   );
 }
