@@ -153,7 +153,7 @@ function ProductPage() {
                   <Form>
                     <Form.Item
                     name="price"
-                    label={<div className="upload-label">상품 가격</div>}
+                    label={<div className="upload-label">입찰 가격</div>}
                     rules={[{ required: true, message: "상품 가격을 입력해주세요" }]}
                     >
                     <InputNumber
@@ -163,6 +163,7 @@ function ProductPage() {
                     ></InputNumber>
                     </Form.Item>
                     <Button
+                    id="bill-button"
                     size="large"
                     type="primary"
                     danger

@@ -73,6 +73,13 @@
 }
 
 #auction-commit {
-    display: flex !important;
-    flex-direction: row !important;
+
+}
+
+.upload-price {
+    width: 148px;
+}
+
+#bill-button {
+    width: 250px;
 }
