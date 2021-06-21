@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
-import { Button, message ,Spin, Space} from "antd";
+import { Button, message, Spin, Space } from "antd";
 import ProductCard from "../components/productCard";
+import jwt_decode from "jwt-decode";
+import { Link } from "react-router-dom";
 
 const config = {
   headers: { Authorization: localStorage.getItem("Authorization") },
@@ -13,6 +15,7 @@ const config = {
 
 function ProductPage() {
   const { id } = useParams();
+  const [userId, setuserId] = useState();
   const [product, setProduct] = useState(null);
   const [products, setProducts] = useState([]);
 
@@ -29,29 +32,40 @@ function ProductPage() {
   };
 
   const getRecommendations = () => {
-        axios.get(`http://localhost:8080/products/${id}/recommendation`)
-        .then((result) => {
-            setProducts(result.data.products);
-            console.log(result.data.products);
-        })
-        .catch((error) => {
-            console.error(error);
-        })
-    }
+    axios
+      .get(
+        `https://itsmine-recommend-server.herokuapp.com/products/${id}/recommendation`
+      )
+      .then((result) => {
+        setProducts(result.data.products);
+        console.log(result.data.products);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-  useEffect(function () {
-    getProduct();
-    getRecommendations();
-  }, [id]);
+  useEffect(
+    function () {
+      let jwtTokenTemp = localStorage.getItem("Authorization");
+      let jwtToken = jwtTokenTemp.replace("Bearer ", "");
+      getProduct();
+      getRecommendations();
+      setuserId(jwt_decode(jwtToken).id);
+    },
+    [id]
+  );
 
   if (product === null) {
-    return <div>
-    <Space size="middle">
-    <Spin size="small" />
-    <Spin />
-    <Spin size="large" />
-  </Space>
-  </div>
+    return (
+      <div>
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
   }
 
   const onClickPurchase = () => {
@@ -68,33 +82,30 @@ function ProductPage() {
 
   return (
     <div>
-      
       <div id="image-box">
         <img src={`${API_URL}${product.imageUrl}`} />
-        
       </div>
-      
+
       <div id="profile-box">
         <div>
-        <img src="/images/icons/avatar.png" />
-        <span>{product.user.username}</span>
+          <img src="/images/icons/avatar.png" />
+          <span>{product.user.username}</span>
         </div>
-        <div id="change-button">
-        <Button
-          id="change-button1"
-          size="small"
-          type="primary"
-        >
-          수정
-        </Button>
-        <Button
-          size="small"
-          type="primary"
-          danger
-        >
-          삭제
-        </Button>
-        </div>
+        {product.user.id === userId ? (
+          <div id="change-button">
+            <Link to={"/updateForm/" + product.id}>
+              <Button id="change-button1" size="small" type="primary">
+                수정
+              </Button>
+            </Link>
+
+            <Button size="small" type="primary" danger>
+              삭제
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
 
       <div id="contents-box">
@@ -114,23 +125,16 @@ function ProductPage() {
           재빨리 구매하기
         </Button>
         <pre id="description">{product.description}</pre>
-
-
       </div>
       <div>
-                    <h1>추천 상품</h1>
-                    <div style={{display:'flex',flexWrap : 'wrap'}}>
-                    {
-                        products.map((product, index) => {
-                            return (
-                                <ProductCard key={index} product={product} />
-                            )
-                        })
-                    }
-                    </div>
-                </div>
+        <h1>추천 상품</h1>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {products.map((product, index) => {
+            return <ProductCard key={index} product={product} />;
+          })}
+        </div>
+      </div>
     </div>
-    
   );
 }
 

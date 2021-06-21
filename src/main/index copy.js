@@ -9,12 +9,7 @@ import RegisterPage from "./register/index";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { Button, Affix, Menu, Dropdown } from "antd";
 import {
-  CarOutlined,
-  ThunderboltOutlined,
-  CameraOutlined,
-  HeartOutlined,
-  SkinOutlined,
-  LaptopOutlined,
+  DownloadOutlined,
   DownOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
@@ -37,28 +32,6 @@ function App() {
 
   //
   const menu = (
-    <Menu>
-      <Menu.Item icon={<SkinOutlined />} key="1">
-        의류
-      </Menu.Item>
-      <Menu.Item icon={<HeartOutlined />} key="1">
-        신발,가방,잡화
-      </Menu.Item>
-      <Menu.Item icon={<LaptopOutlined />} key="1">
-        컴퓨터,주변기기
-      </Menu.Item>
-      <Menu.Item icon={<CameraOutlined />} key="1">
-        카메라
-      </Menu.Item>
-      <Menu.Item icon={<ThunderboltOutlined />} key="1">
-        디지털,가전
-      </Menu.Item>
-      <Menu.Item icon={<CarOutlined />} key="1">
-        자동차
-      </Menu.Item>
-    </Menu>
-  );
-  const menu2 = (
     <Menu>
       <Menu.Item onClick={upload} key="1" icon={<PlusOutlined />}>
         일반상품
@@ -92,11 +65,16 @@ function App() {
             {isLogin ? (
               <>
                 <div>
-                  <Button
-                    size="large"
-                    onClick={logoutProc}
-                    className="k-button"
-                  >
+                  <Dropdown overlay={menu}>
+                    <Button
+                      className="k-button"
+                      size="large"
+                      icon={<DownOutlined />}
+                    >
+                      상품 업로드
+                    </Button>
+                  </Dropdown>
+                  <Button size="large" onClick={logoutProc}>
                     로그아웃
                   </Button>
                 </div>
@@ -116,7 +94,6 @@ function App() {
 
                   <Button
                     size="large"
-                    className="k-button"
                     onClick={function () {
                       history.push("/register");
                     }}
@@ -126,35 +103,6 @@ function App() {
                 </div>
               </>
             )}
-          </div>
-        </div>
-
-        <div id="header-cat">
-          <div id="header-area-cat">
-            <>
-              <div>
-                <Dropdown overlay={menu}>
-                  <Button
-                    className="k-button"
-                    size="large"
-                    icon={<DownOutlined />}
-                  >
-                    카테고리
-                  </Button>
-                </Dropdown>
-              </div>
-            </>
-            <>
-              <Dropdown overlay={menu2}>
-                <Button
-                  className="k-button"
-                  size="large"
-                  icon={<PlusOutlined />}
-                >
-                  상품 업로드
-                </Button>
-              </Dropdown>
-            </>
           </div>
         </div>
       </Affix>
