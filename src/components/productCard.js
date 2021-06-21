@@ -17,7 +17,7 @@ function ProductCard(props) {
                     <Link to={`/products/${product.id}`}>
                     
                     <div>
-                        <img className="product-img" src={`https://itsmine-recommend-server.herokuapp.com/${product.imageUrl}`}/>
+                        <img className="product-img" src={`http://localhost:8080/${product.imageUrl}`}/>
                     </div>
                     <div className="product-contents">
                         <span className="product-name">

@@ -29,7 +29,7 @@ function ProductPage() {
   };
 
   const getRecommendations = () => {
-        axios.get(`https://itsmine-recommend-server.herokuapp.com/products/${id}/recommendation`)
+        axios.get(`http://localhost:8080/products/${id}/recommendation`)
         .then((result) => {
             setProducts(result.data.products);
             console.log(result.data.products);

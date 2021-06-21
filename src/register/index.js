@@ -88,7 +88,7 @@ function RegistrationForm() {
           },
         ]}
       >
-        <Input />
+        <Input className="register-input" />
       </Form.Item>
       
       <Form.Item
@@ -105,7 +105,7 @@ function RegistrationForm() {
           },
         ]}
       >
-        <Input />
+        <Input  className="register-input" />
       </Form.Item>
 
       <Form.Item
@@ -119,7 +119,7 @@ function RegistrationForm() {
         ]}
         hasFeedback
       >
-        <Input.Password />
+        <Input.Password  className="register-input"/>
       </Form.Item>
 
       <Form.Item
@@ -143,7 +143,7 @@ function RegistrationForm() {
           }),
         ]}
       >
-        <Input.Password />
+        <Input.Password  className="register-input"/>
       </Form.Item>
 
       <Form.Item
@@ -158,7 +158,7 @@ function RegistrationForm() {
           },
         ]}
       >
-        <Input />
+        <Input  className="register-input"/>
       </Form.Item>
 
       <Form.Item
@@ -171,7 +171,7 @@ function RegistrationForm() {
           },
         ]}
       >
-        <Input />
+        <Input className="register-input" />
       </Form.Item>
       
       <Form.Item {...tailFormItemLayout}>

@@ -44,7 +44,7 @@ function MainPage() {
           return (
             <a href={banner.adHref}>
               <div id="banner">
-                <img src={`${API_URL}/upload${banner.imageUrl}`} />
+                <img src={`${API_URL}${banner.imageUrl}`} />
               </div>
             </a>
           );

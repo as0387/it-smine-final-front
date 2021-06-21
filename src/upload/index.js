@@ -107,12 +107,6 @@ function UploadPage() {
               </div>
             )}
           </Upload>
-        </Form.Item>
-
-        <Form.Item
-          name="upload"
-          label={<div className="upload-label">상품 사진</div>}
-        >
           <Upload
             name="image"
             action={`http://localhost:8080/image`}
@@ -130,6 +124,8 @@ function UploadPage() {
             )}
           </Upload>
         </Form.Item>
+
+        
 
         <Form.Item
           name="title"

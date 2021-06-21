@@ -36,6 +36,7 @@
 
 #product-description {
     height: 150px;
+    width: 500px;
 }
 
 #submit-button {
@@ -51,4 +52,9 @@
     height: 200px;
     margin-left: 16px;
     object-fit: contain;
+}
+
+#photo {
+    display: flex;
+    flex-direction: row;
 }

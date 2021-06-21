@@ -10,20 +10,15 @@
     margin-top: 50px;
 }
 
-
-
 .ant-form-item-label{
     width: 100px;
 }
 
-.ant-input-affix-wrapper{
-    
-    width: 300px
+.register-input {
+    width: 400px !important;
 }
 
-.ant-col-xs-24 {
-    flex: none;
-}
+
 
 @media screen and (max-width: 400px) {
     #register-container {
