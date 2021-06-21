@@ -9,7 +9,8 @@ import { Button, message,InputNumber,Form, Spin, Space } from "antd";
 import ProductCard from "../components/productCard";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
-import Comment from "../comments/comment"
+import Comment from "../comments/index";
+
 
 
 const config = {
@@ -103,27 +104,6 @@ function ProductPage() {
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
   };
-
-
-
-   
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-        /*
-        var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
-        */
-        (function() { // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        s.src = 'https://itsmine-1.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-        })();
-    
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
   return (
     <div>
@@ -227,7 +207,7 @@ function ProductPage() {
           })}
         </div>
       </div>
-      <div id="disqus_thread"></div>
+      <Comment/>
     </div>
   );
 }

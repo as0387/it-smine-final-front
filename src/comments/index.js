@@ -5,6 +5,7 @@ import './index.css';
 import { Comment, Avatar, Form, Button, List, Input } from 'antd';
 import moment from 'moment';
 
+
 const { TextArea } = Input;
 
 const CommentList = ({ comments }) => (
@@ -95,4 +96,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('container'));
+export default App;
