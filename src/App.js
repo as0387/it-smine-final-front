@@ -87,7 +87,7 @@ function App() {
         <div id="header">
           <div id="header-area">
             <Link to="/">
-              <img src="/images/icons/잇츠마인.png" width="150" />
+              <img src="/images/icons/잇츠마인.png" width="" />
             </Link>
             {isLogin ? (
               <>
@@ -95,7 +95,7 @@ function App() {
                   <Button
                     size="large"
                     onClick={logoutProc}
-                    className="k-button"
+                    className="k-button3"
                   >
                     로그아웃
                   </Button>
@@ -105,7 +105,7 @@ function App() {
               <>
                 <div>
                   <Button
-                    className="k-button"
+                    className="k-button3"
                     size="large"
                     onClick={function () {
                       history.push("/login");
@@ -116,7 +116,7 @@ function App() {
 
                   <Button
                     size="large"
-                    className="k-button"
+                    className="k-button3"
                     onClick={function () {
                       history.push("/register");
                     }}
@@ -135,7 +135,7 @@ function App() {
               <div>
                 <Dropdown overlay={menu}>
                   <Button
-                    className="k-button"
+                    className="k-button2"
                     size="large"
                     icon={<DownOutlined />}
                   >
@@ -149,6 +149,7 @@ function App() {
                 <Button
                   className="k-button"
                   size="large"
+                  type="primary"
                   icon={<PlusOutlined />}
                 >
                   상품 업로드
@@ -160,6 +161,7 @@ function App() {
       </Affix>
 
       <div id="body">
+        
         <Switch>
           <Route exact={true} path="/">
             <MainPageComponent />
@@ -182,7 +184,6 @@ function App() {
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
           </Route>
-          
         </Switch>
       </div>
       <div id="footer"></div>

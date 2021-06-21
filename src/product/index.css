@@ -65,3 +65,14 @@
 #change-button1 {
     margin-right: 10px;
 }
+
+#spin-spin {
+    display: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+#auction-commit {
+    display: flex !important;
+    flex-direction: row !important;
+}

@@ -7,7 +7,6 @@ import {
   Upload,
   message,
 } from "antd";
-import FormItem from "antd/lib/form/FormItem";
 import { useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
