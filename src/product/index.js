@@ -109,22 +109,43 @@ function ProductPage() {
       </div>
 
       <div id="contents-box">
+        <div>
+
+        
         <div id="name">{product.title}</div>
         <div id="price">{product.price}원</div>
         <div id="createdAt">
           {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
         </div>
-        <Button
-          id="purchase-button"
-          size="large"
-          type="primary"
-          danger
-          onClick={onClickPurchase}
-          disabled={product.soldout === 1 ? true : false}
-        >
-          재빨리 구매하기
-        </Button>
+        {
+          product.type ? (
+            <div>
+              
+            </div>
+          ) : (
+            <div>
+              <div>
+                <Button
+                id="purchase-button"
+                size="large"
+                type="primary"
+                danger
+                onClick={onClickPurchase}
+                disabled={product.soldout === 1 ? true : false}
+                >
+                  재빨리 구매하기
+                </Button>
+              </div>
+            </div>
+          )
+        }
+        
+        
         <pre id="description">{product.description}</pre>
+        </div>
+        <div>
+          
+        </div>
       </div>
       <div>
         <h1>추천 상품</h1>

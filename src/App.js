@@ -182,6 +182,7 @@ function App() {
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
           </Route>
+          
         </Switch>
       </div>
       <div id="footer"></div>

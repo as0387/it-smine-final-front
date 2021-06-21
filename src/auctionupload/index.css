@@ -30,7 +30,7 @@
 
 .upload-label {
     font-size: 18px;
-    width: 150px;
+    width: 150px !important;
 }
 
 #product-description {
