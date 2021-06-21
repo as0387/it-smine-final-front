@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./index.css";
@@ -18,6 +18,7 @@ function ProductPage() {
   const [userId, setuserId] = useState();
   const [product, setProduct] = useState(null);
   const [products, setProducts] = useState([]);
+  const history = useHistory();
 
   const getProduct = () => {
     axios
@@ -42,6 +43,20 @@ function ProductPage() {
       })
       .catch((error) => {
         console.error(error);
+      });
+  };
+
+  const deletePost = (postId) => {
+    axios
+      .delete(`${API_URL}/post/${id}`, config)
+      .then((result) => {
+        console.log(result);
+        alert("삭제완료");
+        history.push("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        message.error(`에러가 발생했습니다. ${error.message}`);
       });
   };
 
@@ -99,7 +114,12 @@ function ProductPage() {
               </Button>
             </Link>
 
-            <Button size="small" type="primary" danger>
+            <Button
+              size="small"
+              type="primary"
+              danger
+              onClick={() => deletePost(product.id)}
+            >
               삭제
             </Button>
           </div>

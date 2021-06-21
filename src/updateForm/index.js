@@ -7,12 +7,12 @@ import {
   Upload,
   message,
 } from "antd";
-import FormItem from "antd/lib/form/FormItem";
-import { useState } from "react";
+import { Spin, Space } from "antd";
+import { useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 const config = {
   headers: { Authorization: localStorage.getItem("Authorization") },
@@ -21,12 +21,27 @@ const config = {
 function UpdateForm() {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageUrl2, setImageUrl2] = useState(null);
+  const { id } = useParams();
   const history = useHistory();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/products/${id}`, config)
+      .then((result) => {
+        console.log(result);
+        setProduct(result.data);
+        setImageUrl(result.data.imageUrl);
+      })
+      .catch((error) => {
+        console.error("에러!", error);
+      });
+  }, []);
 
   const onSubmit = (values) => {
     axios
-      .post(
-        `${API_URL}/post`,
+      .put(
+        `${API_URL}/post/${id}`,
         {
           title: values.title,
           description: values.description,
@@ -81,6 +96,19 @@ function UpdateForm() {
       setImageUrl2(imageUrl2);
     }
   };
+
+  if (product === null) {
+    return (
+      <div>
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
+
   return (
     <div id="upload-container">
       <Form name="상품 업로드" onFinish={onSubmit}>
@@ -130,7 +158,7 @@ function UpdateForm() {
           <Input
             className="upload-name"
             size="large"
-            placeholder="상품 이름을 입력해주세요."
+            defaultValue={`${product.title}`}
           ></Input>
         </Form.Item>
         <Divider />
@@ -142,7 +170,7 @@ function UpdateForm() {
           <InputNumber
             className="upload-price"
             size="large"
-            defaultValue={0}
+            defaultValue={`${product.price}`}
           ></InputNumber>
         </Form.Item>
         <Divider />
@@ -157,6 +185,7 @@ function UpdateForm() {
             showCount
             maxLength={300}
             placeholder="상품 소개를 적어주세요."
+            defaultValue={`${product.description}`}
           ></Input.TextArea>
         </Form.Item>
         <Form.Item>
