@@ -49,9 +49,9 @@ function LoginPage() {
     },
   };
 
-  const responseGoogle = async (response) => {
+  const responseGoogle = (response) => {
     console.log(1, response);
-    let jwtToken = await axios.post(
+    let jwtToken = axios.post(
       `${API_URL}/oauth/jwt/google`,
       JSON.stringify(response),
       config
@@ -64,9 +64,9 @@ function LoginPage() {
     }
   };
 
-  const responseKakao = async (response) => {
+  const responseKakao = (response) => {
     console.log(1, response);
-    let jwtToken = await axios.post(
+    let jwtToken = axios.post(
       `${API_URL}/oauth/jwt/kakao`,
       JSON.stringify(response),
       config
@@ -81,7 +81,7 @@ function LoginPage() {
 
   return (
     <div id="login-container">
-      <img id="logo"src="/images/icons/잇츠마인.png" width="150" />
+      <img id="logo" src="/images/icons/잇츠마인.png" width="150" />
       <Form
         id="login-form"
         name="normal_login"
