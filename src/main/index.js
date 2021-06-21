@@ -68,7 +68,11 @@ function MainPage() {
                     <span>{product.title}</span>
                   </span>
                   <span className="product-price">
-                    <span>{product.price}원</span>
+                    {product.bid === null ? (
+                      <span>{product.price}원</span>
+                    ) : (
+                      <span>{product.bid}원</span>
+                    )}
                   </span>
                   <div className="product-footer">
                     <div className="product-seller">

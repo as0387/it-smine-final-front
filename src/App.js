@@ -7,7 +7,7 @@ import ProductPage from "./product";
 import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
-import { Button, Affix, Menu, Dropdown } from "antd";
+import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
   CarOutlined,
   ThunderboltOutlined,
@@ -29,10 +29,20 @@ function App() {
 
   const isLogin = useSelector((store) => store.isLogin);
   const upload = function () {
-    history.push("/upload");
+    if (!isLogin) {
+      message.error("로그인 후 이용해 주세요!");
+      history.push("/login");
+    } else {
+      history.push("/upload");
+    }
   };
   const auctionupload = () => {
-    history.push("/auctionupload");
+    if (!isLogin) {
+      message.error("로그인 후 이용해 주세요!");
+      history.push("/login");
+    } else {
+      history.push("/auctionupload");
+    }
   };
 
   //
@@ -161,7 +171,6 @@ function App() {
       </Affix>
 
       <div id="body">
-        
         <Switch>
           <Route exact={true} path="/">
             <MainPageComponent />
