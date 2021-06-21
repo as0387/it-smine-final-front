@@ -1,6 +1,32 @@
 #register-container {
-    margin-top: 100px;
-    margin-right: 100px;
-    margin-left: 100px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 
+#logo {
+    margin-top: 50px;
+}
+
+
+
+.ant-form-item-label{
+    width: 100px;
+}
+
+.ant-input-affix-wrapper{
+    
+    width: 300px
+}
+
+.ant-col-xs-24 {
+    flex: none;
+}
+
+@media screen and (max-width: 400px) {
+    #register-container {
+    margin-left: 10px;
+}
+}

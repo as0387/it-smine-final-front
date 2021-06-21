@@ -61,6 +61,9 @@ function RegistrationForm() {
   };
 
   return (
+    <div id="register-contain">
+
+    <img id="logo"src="/images/icons/잇츠마인.png" width="150" />
     <Form
       id="register-container"
       {...formItemLayout}
@@ -73,6 +76,7 @@ function RegistrationForm() {
       }}
       scrollToFirstError
     >
+      
       <Form.Item
         name="username"
         label="아이디"
@@ -86,7 +90,7 @@ function RegistrationForm() {
       >
         <Input />
       </Form.Item>
-
+      
       <Form.Item
         name="email"
         label="이메일"
@@ -169,30 +173,14 @@ function RegistrationForm() {
       >
         <Input />
       </Form.Item>
-
-      <Form.Item
-        name="agreement"
-        valuePropName="checked"
-        rules={[
-          {
-            validator: (_, value) =>
-              value
-                ? Promise.resolve()
-                : Promise.reject(new Error("약관에 동의해주세요")),
-          },
-        ]}
-        {...tailFormItemLayout}
-      >
-        <Checkbox>
-          약관에 <a href="#">동의</a>
-        </Checkbox>
-      </Form.Item>
+      
       <Form.Item {...tailFormItemLayout}>
         <Button type="primary" htmlType="submit">
           Register
         </Button>
       </Form.Item>
     </Form>
+    </div>
   );
 }
 

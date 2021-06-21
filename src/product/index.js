@@ -29,7 +29,7 @@ function ProductPage() {
   };
 
   const getRecommendations = () => {
-        axios.get(`http://localhost:8080/products/${id}/recommendation`)
+        axios.get(`https://itsmine-recommend-server.herokuapp.com/products/${id}/recommendation`)
         .then((result) => {
             setProducts(result.data.products);
             console.log(result.data.products);
@@ -68,12 +68,33 @@ function ProductPage() {
 
   return (
     <div>
+      
       <div id="image-box">
         <img src={`${API_URL}${product.imageUrl}`} />
+        
       </div>
+      
       <div id="profile-box">
+        <div>
         <img src="/images/icons/avatar.png" />
         <span>{product.user.username}</span>
+        </div>
+        <div id="change-button">
+        <Button
+          id="change-button1"
+          size="small"
+          type="primary"
+        >
+          수정
+        </Button>
+        <Button
+          size="small"
+          type="primary"
+          danger
+        >
+          삭제
+        </Button>
+        </div>
       </div>
 
       <div id="contents-box">

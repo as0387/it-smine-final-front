@@ -13,11 +13,14 @@ body,
 }
 
 #header {
+
   height: 64px;
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid gainsboro;
+  box-shadow: 0 1px 1px 0 rgba(230,230,230);
   background-color: white;
+  margin-bottom: 10px;
   
 }
 
