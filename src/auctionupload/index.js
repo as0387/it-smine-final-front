@@ -46,7 +46,7 @@ function AuctionUpload() {
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
     axios
-      .post(`http://localhost:8080/products`, {
+      .post(`https://75bee61c1be4.ngrok.io/products`, {
         title: values.title,
         description: values.description,
         price: parseInt(values.price),
@@ -108,13 +108,16 @@ function AuctionUpload() {
           </Upload>
           <Upload
             name="image"
-            action={`http://localhost:8080/image`}
+            action={`https://75bee61c1be4.ngrok.io/image`}
             listType="picture"
             showUploadList={false}
             onChange={onChangeImage2}
           >
             {imageUrl2 ? (
-              <img id="upload-img" src={`http://localhost:8080/${imageUrl2}`} />
+              <img
+                id="upload-img"
+                src={`https://75bee61c1be4.ngrok.io/${imageUrl2}`}
+              />
             ) : (
               <div id="upload-img-placeholder">
                 <img src="/images/icons/camera.png"></img>

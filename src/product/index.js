@@ -9,6 +9,7 @@ import ProductCard from "../components/productCard";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
 import Comment from "../comments/index";
+import BidPage from "../auction/normal/bidPage";
 
 const config = {
   headers: { Authorization: localStorage.getItem("Authorization") },
@@ -29,19 +30,6 @@ function ProductPage() {
       })
       .catch((error) => {
         console.error("에러!", error);
-      });
-  };
-
-  const getRecommendations = () => {
-    axios
-      .get(
-        `https://itsmine-recommend-server.herokuapp.com/products/${id}/recommendation`
-      )
-      .then((result) => {
-        setProducts(result.data.products);
-      })
-      .catch((error) => {
-        console.error(error);
       });
   };
 
@@ -68,40 +56,11 @@ function ProductPage() {
       } else {
         let jwtToken = jwtTokenTemp.replace("Bearer ", "");
         getProduct();
-        getRecommendations();
         setuserId(jwt_decode(jwtToken).id);
       }
     },
     [id, product]
   );
-
-  const bidPost = (values) => {
-    if (product.bid > parseInt(values.bid)) {
-      message.error(`입찰금액이 현재 가격보다 낮습니다...`);
-    } else {
-      axios
-        .put(
-          `${API_URL}/bidPost/${id}`,
-          {
-            title: product.title,
-            description: product.description,
-            bid: parseInt(values.bid),
-            bidderId: userId,
-            imageUrl: product.imageUrl,
-          },
-          config
-        )
-        .then((result) => {
-          console.log(result);
-          message.success("입찰되었습니다!");
-          history.replace(`/products/${id}`);
-        })
-        .catch((error) => {
-          console.error(error);
-          message.error(`에러가 발생했습니다. ${error.message}`);
-        });
-    }
-  };
 
   if (product === null) {
     return (
@@ -176,30 +135,7 @@ function ProductPage() {
             <div>
               <div>
                 <div id="auction-commit">
-                  <Form onFinish={bidPost}>
-                    <Form.Item
-                      name="bid"
-                      label={<div className="upload-label">입찰 가격(원)</div>}
-                      rules={[
-                        { required: true, message: "상품 가격을 입력해주세요" },
-                      ]}
-                    >
-                      <InputNumber
-                        className="upload-price"
-                        size="large"
-                        defaultValue={0}
-                      ></InputNumber>
-                    </Form.Item>
-                    <Button
-                      id="bill-button"
-                      size="large"
-                      type="primary"
-                      danger
-                      htmlType
-                    >
-                      입찰하기
-                    </Button>
-                  </Form>
+                  <BidPage product={product} userId={userId} />
                 </div>
               </div>
             </div>
@@ -229,7 +165,7 @@ function ProductPage() {
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {products.map((product, index) => {
-            return <ProductCard key={index} product={product} />;
+            //return <ProductCard key={index} product={product} />;
           })}
         </div>
       </div>
