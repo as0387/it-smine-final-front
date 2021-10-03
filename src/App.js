@@ -6,6 +6,7 @@ import AuctionUpload from "./auctionupload";
 import ProductPage from "./product";
 import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
+import MyPage from "./mypage/index";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
@@ -23,11 +24,13 @@ import { login, logout } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateForm from "./updateForm";
 
+
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const isLogin = useSelector((store) => store.isLogin);
+
   const upload = function () {
     if (!isLogin) {
       message.error("로그인 후 이용해 주세요!");
@@ -36,6 +39,7 @@ function App() {
       history.push("/upload");
     }
   };
+
   const auctionupload = () => {
     if (!isLogin) {
       message.error("로그인 후 이용해 주세요!");
@@ -84,6 +88,8 @@ function App() {
     dispatch(logout());
   };
 
+
+
   useEffect(() => {
     let jwtToken = localStorage.getItem("Authorization");
     if (jwtToken !== null) {
@@ -102,6 +108,13 @@ function App() {
             {isLogin ? (
               <>
                 <div>
+                  <Button
+                    size="large"
+                    
+                    className="k-button3"
+                  >
+                    내정보
+                  </Button>
                   <Button
                     size="large"
                     onClick={logoutProc}
@@ -189,6 +202,9 @@ function App() {
           </Route>
           <Route exact={true} path="/register">
             <RegisterPage />
+          </Route>
+          <Route exact={true} path="/mypage">
+            <MyPage />
           </Route>
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
