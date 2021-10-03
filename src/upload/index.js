@@ -13,16 +13,16 @@ import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-const config = {
-  headers: { Authorization: localStorage.getItem("Authorization") },
-};
-
 function UploadPage() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
   const [imageUrl, setImageUrl] = useState(null);
   const [imageUrl2, setImageUrl2] = useState(null);
   const history = useHistory();
 
   const onSubmit = (values) => {
+    console.log(localStorage.getItem("Authorization"));
     axios
       .post(
         `${API_URL}/post`,
@@ -42,21 +42,22 @@ function UploadPage() {
         console.error(error);
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
-    axios
-      .post(`https://75bee61c1be4.ngrok.io/products`, {
-        title: values.title,
-        description: values.description,
-        price: parseInt(values.price),
-        imageUrl: imageUrl2,
-      })
-      .then((result) => {
-        console.log(result);
-        history.replace("/");
-      })
-      .catch((error) => {
-        console.error(error);
-        message.error(`에러가 발생했습니다. ${error.message}`);
-      });
+    //추천 서버이니까 나중에 추가하시오.
+    // axios
+    //   .post(`https://75bee61c1be4.ngrok.io/products`, {
+    //     title: values.title,
+    //     description: values.description,
+    //     price: parseInt(values.price),
+    //     imageUrl: imageUrl2,
+    //   })
+    //   .then((result) => {
+    //     console.log(result);
+    //     history.replace("/");
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //     message.error(`에러가 발생했습니다. ${error.message}`);
+    //   });
   };
   const onChangeImage = (info) => {
     console.log(info.file.status);

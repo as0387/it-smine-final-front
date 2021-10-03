@@ -1,0 +1,9 @@
+.ant-statistic-title {
+  float: left;
+  font-size: 20px;
+  width: 80px;
+  color: rgb(253, 91, 118);
+}
+.ant-statistic-content {
+  width: 270px;
+}

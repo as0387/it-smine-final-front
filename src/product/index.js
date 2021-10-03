@@ -11,11 +11,10 @@ import { Link } from "react-router-dom";
 import Comment from "../comments/index";
 import BidPage from "../auction/normal/bidPage";
 
-const config = {
-  headers: { Authorization: localStorage.getItem("Authorization") },
-};
-
 function ProductPage() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
   const { id } = useParams();
   const [userId, setuserId] = useState();
   const [product, setProduct] = useState(null);
@@ -46,21 +45,18 @@ function ProductPage() {
       });
   };
 
-  useEffect(
-    function () {
-      let jwtTokenTemp = localStorage.getItem("Authorization");
+  useEffect(function () {
+    let jwtTokenTemp = localStorage.getItem("Authorization");
 
-      if (jwtTokenTemp === null) {
-        message.error("로그인 후 이용가능합니다!");
-        history.push("/login");
-      } else {
-        let jwtToken = jwtTokenTemp.replace("Bearer ", "");
-        getProduct();
-        setuserId(jwt_decode(jwtToken).id);
-      }
-    },
-    [id, product]
-  );
+    if (jwtTokenTemp === null) {
+      message.error("로그인 후 이용가능합니다!");
+      history.push("/login");
+    } else {
+      let jwtToken = jwtTokenTemp.replace("Bearer ", "");
+      getProduct();
+      setuserId(jwt_decode(jwtToken).id);
+    }
+  }, []);
 
   if (product === null) {
     return (
@@ -127,7 +123,6 @@ function ProductPage() {
           ) : (
             <div id="price">{product.bid}원</div>
           )}
-
           <div id="createdAt">
             {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
           </div>
@@ -161,14 +156,14 @@ function ProductPage() {
           <pre id="description">{product.description}</pre>
         </div>
       </div>
-      <div>
+      {/* <div>
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {products.map((product, index) => {
             //return <ProductCard key={index} product={product} />;
           })}
         </div>
-      </div>
+      </div> */}
       <Comment />
     </div>
   );
