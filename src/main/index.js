@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
 import { Carousel } from "antd";
-import ProductCard from "../components/productCard";
 
 dayjs.extend(relativeTime);
 

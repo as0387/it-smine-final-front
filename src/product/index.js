@@ -5,7 +5,6 @@ import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
 import { Button, message, InputNumber, Form, Spin, Space } from "antd";
-import ProductCard from "../components/productCard";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
 import Comment from "../comments/index";
@@ -18,7 +17,6 @@ function ProductPage() {
   const { id } = useParams();
   const [userId, setuserId] = useState();
   const [product, setProduct] = useState(null);
-  const [products, setProducts] = useState([]);
   const history = useHistory();
 
   const getProduct = () => {
@@ -56,7 +54,7 @@ function ProductPage() {
       getProduct();
       setuserId(jwt_decode(jwtToken).id);
     }
-  }, []);
+  }, [id, product]);
 
   if (product === null) {
     return (

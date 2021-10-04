@@ -1,4 +1,4 @@
 export const API_URL =
   process.env.NODE_ENV === "production"
-    ? "http://localhost:8000"
-    : "http://localhost:8000";
+    ? "http://2524-118-32-104-146.ngrok.io"
+    : "http://2524-118-32-104-146.ngrok.io";

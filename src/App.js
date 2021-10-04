@@ -7,6 +7,7 @@ import ProductPage from "./product";
 import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
 import MyPage from "./mypage/index";
+import MypageUpdatePage from "./mypageUpdate";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
@@ -88,6 +89,10 @@ function App() {
     dispatch(logout());
   };
 
+  const mypageProc = () => {
+    history.push("/mypage")
+  };
+
 
 
   useEffect(() => {
@@ -110,7 +115,7 @@ function App() {
                 <div>
                   <Button
                     size="large"
-                    
+                    onClick={mypageProc}
                     className="k-button3"
                   >
                     내정보
@@ -205,6 +210,9 @@ function App() {
           </Route>
           <Route exact={true} path="/mypage">
             <MyPage />
+          </Route>
+          <Route exact={true} path="/mypageupdate">
+            <MypageUpdatePage/>
           </Route>
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
