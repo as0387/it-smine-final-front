@@ -10,26 +10,40 @@ import {UserOutlined, ShoppingCartOutlined} from '@ant-design/icons';
 import { Link } from "react-router-dom";
 
 function MyPage() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
   const history = useHistory();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   React.useEffect(function () {
     axios
-      .get(`${API_URL}/user-info`)
+      .get(`${API_URL}/user-info`, config)
       .then((result) => {
         console.log(result);
         //실제 데이터로 변경
-        const contents = result.data.content;
-        setUser(contents);
+        setUser(result.data);
       })
       .catch((error) => {
         console.error("에러발생!!", error);
       });
   }, []);
+   if (user === null) {
+    return (
+      <div id="spin-spin">
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
   return (
       <>
             <div>
             <Avatar shape="square" size={128} icon={<UserOutlined />} />
-            <p>유저 이름 : {"임동혁"}</p>
+            <p>유저 이름 : {user.nickname}</p>
+            <p>이메일 : {user.email}</p>
             <p>보유 포인트 : {"30000"}</p>
             <p>매너 온도</p>
             <Progress
