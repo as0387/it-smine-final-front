@@ -41,7 +41,14 @@ function MyPage() {
   return (
       <>
             <div>
-            <Avatar shape="square" size={128} icon={<UserOutlined />} />
+            {user.profileImageUrl ? (
+              <img id="upload-profile" src={`${user.profileImageUrl}`} />
+            ) : (
+              <div id="upload-profile-placeholder">
+                <img src="/images/icons/camera.png"></img>
+                <span>이미지를 업로드해주세요.</span>
+              </div>
+            )}
             <p>유저 이름 : {user.nickname}</p>
             <p>이메일 : {user.email}</p>
             <p>보유 포인트 : {"30000"}</p>

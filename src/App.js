@@ -87,6 +87,7 @@ function App() {
   const logoutProc = () => {
     localStorage.removeItem("Authorization");
     dispatch(logout());
+    history.push("/")
   };
 
   const mypageProc = () => {
