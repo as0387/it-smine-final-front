@@ -9,18 +9,24 @@ import { Button, message, InputNumber, Form, Spin, Space, Avatar, Progress, Uplo
 import {UserOutlined, ShoppingCartOutlined} from '@ant-design/icons';
 import { Link } from "react-router-dom";
 
+
 function MyPageupdateForm() {
   const history = useHistory();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
+
+  
   React.useEffect(function () {
     axios
-      .get(`${API_URL}/my-page`)
+      .get(`${API_URL}/user-info`,config)
       .then((result) => {
         console.log(result);
         //실제 데이터로 변경
-        const contents = result.data.content;
-        setUser(contents);
+        
+        setUser(result.data);
       })
       .catch((error) => {
         console.error("에러발생!!", error);
@@ -31,10 +37,13 @@ function MyPageupdateForm() {
     console.log(localStorage.getItem("Authorization"));
     axios
       .post(
-        `${API_URL}/user?`,
+        `${API_URL}/image/profile`,
         {
-          
+          title: values.username,
+          email: values.email,
+          imageUrl: imageUrl,
         },
+        config
       )
       .then((result) => {
         console.log(result);
@@ -55,6 +64,19 @@ function MyPageupdateForm() {
       setImageUrl(imageUrl);
     }
   };
+
+  if (user === null) {
+    return (
+      <div>
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
+
   return (
     <>
       <Form name="프로필 편집" onFinish={onSubmit}>
@@ -63,7 +85,7 @@ function MyPageupdateForm() {
         >
           <Upload
             name="image"
-            action={`${API_URL}/profile`}
+            action={`${API_URL}/image/profile`}
             listType="picture"
             showUploadList={false}
             onChange={onChangeImage}
@@ -72,7 +94,7 @@ function MyPageupdateForm() {
               <img id="upload-profile" src={`${API_URL}${imageUrl}`} />
             ) : (
               <div id="upload-profile-placeholder">
-                <img src="/images/icons/camera.png"></img>
+                <img src={`${user.profileImageUrl}`}></img>
                 <span>이미지를 업로드해주세요.</span>
               </div>
             )}
@@ -86,6 +108,18 @@ function MyPageupdateForm() {
             className="upload-name"
             size="large"
             placeholder="닉네임을 입력해주세요."
+            defaultValue={`${user.nickname}`}
+          ></Input>
+        </Form.Item>
+        <Form.Item
+          name="email"
+          rules={[{ required: true, message: "이메일을 입력해주세요" }]}    
+        >
+          <Input
+            className="upload-name"
+            size="large"
+            placeholder="이메일을 입력해주세요."
+            defaultValue={`${user.email}`}
           ></Input>
         </Form.Item>
         <Form.Item>
@@ -97,6 +131,7 @@ function MyPageupdateForm() {
           </Button>
         </Form.Item>
       </Form>
+      
     </>
   );
 }
