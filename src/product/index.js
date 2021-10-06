@@ -89,7 +89,7 @@ function ProductPage() {
       <div id="profile-box">
         <div>
           <img src="/images/icons/avatar.png" />
-          <span>{product.user.username}</span>
+          <span>{product.user.nickname}</span>
         </div>
         {product.user.id === userId ? (
           <div id="change-button">

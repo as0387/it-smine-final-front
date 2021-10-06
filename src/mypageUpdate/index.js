@@ -25,6 +25,7 @@ function MyPageupdateForm() {
         //실제 데이터로 변경
         
         setUser(result.data);
+
       })
       .catch((error) => {
         console.error("에러발생!!", error);
@@ -68,6 +69,7 @@ function MyPageupdateForm() {
     }
     if (info.file.status === "done") {
       const imageUrl = info.file.response;
+      user.profileImageUrl = imageUrl;
       setImageUrl(imageUrl);
     }
   };
@@ -99,7 +101,7 @@ function MyPageupdateForm() {
           >
             {
             user.profileImageUrl.startsWith("/") ?(
-              imageUrl ? (
+              user.profileImageUrl ? (
              <img id="upload-profile" src={`${API_URL}${user.profileImageUrl}`} />
             ) : (
               <div id="upload-profile-placeholder">
@@ -109,7 +111,7 @@ function MyPageupdateForm() {
             )
             
             ) : (
-              imageUrl ? (
+              user.profileImageUrl ? (
              <img id="upload-profile" src={`${user.profileImageUrl}`} />
             ) : (
               <div id="upload-profile-placeholder">
