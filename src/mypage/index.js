@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { Button, message, InputNumber, Form, Spin, Space, Avatar, Progress } from "antd";
 import {UserOutlined, ShoppingCartOutlined} from '@ant-design/icons';
 import { Link } from "react-router-dom";
+import Kakaomap from "../kakaomap/kakao"
 
 function MyPage() {
   const config = {
@@ -73,6 +74,16 @@ function MyPage() {
                     프로필 편집
                   </Button>
             </div>
+            <div>
+                <Button
+                    size="large"
+                    onClick={function () {
+                      history.push("/kakaomap");
+                    }}
+                  >
+                    내 동네 설정하기
+                  </Button>
+            </div>
             
             <div id="tradelist-button">
                 <div>
@@ -87,7 +98,11 @@ function MyPage() {
                     <ShoppingCartOutlined />
                     <Button>실시간 경매 낙찰내역</Button>
                 </div>
+                
+                
             </div>
+
+            
             
     </>
   );
