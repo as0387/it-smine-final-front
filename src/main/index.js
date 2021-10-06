@@ -11,7 +11,12 @@ dayjs.extend(relativeTime);
 
 function MainPage() {
   const [products, setProducts] = React.useState([]);
-  const [banners, setBanners] = React.useState([]);
+  const banners = [
+    "/banner1.jpg",
+    "/banner2.png",
+    "/banner3.png",
+    "/banner4.png",
+  ];
   React.useEffect(function () {
     axios
       .get(`${API_URL}/products`)
@@ -23,17 +28,6 @@ function MainPage() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
-
-    axios
-      .get(`${API_URL}/getBanners`)
-      .then((result) => {
-        console.log(result);
-        const banners = result.data;
-        setBanners(banners);
-      })
-      .catch((error) => {
-        console.error("에러발생 : ", error);
-      });
   }, []);
 
   return (
@@ -41,11 +35,9 @@ function MainPage() {
       <Carousel autoplay autoplaySpeed={3000}>
         {banners.map((banner, index) => {
           return (
-            <a href={banner.adHref}>
-              <div id="banner">
-                <img src={`${API_URL}${banner.imageUrl}`} />
-              </div>
-            </a>
+            <div id="banner">
+              <img src={"/banners" + banner} />
+            </div>
           );
         })}
       </Carousel>
