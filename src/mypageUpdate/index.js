@@ -40,6 +40,7 @@ function MyPageupdateForm() {
     }
     if(email == null){
       email = user.email
+      
     }
     axios
       .post(
@@ -96,14 +97,28 @@ function MyPageupdateForm() {
             showUploadList={false}
             onChange={onChangeImage}
           >
-            {imageUrl ? (
-              <img id="upload-profile" src={`${API_URL}${imageUrl}`} />
+            {
+            user.profileImageUrl.startsWith("/") ?(
+              imageUrl ? (
+             <img id="upload-profile" src={`${API_URL}${user.profileImageUrl}`} />
             ) : (
               <div id="upload-profile-placeholder">
-                <img src={`${user.profileImageUrl}`}></img>
+                <img src="/images/icons/camera.png"></img>
                 <span>이미지를 업로드해주세요.</span>
               </div>
-            )}
+            )
+            
+            ) : (
+              imageUrl ? (
+             <img id="upload-profile" src={`${user.profileImageUrl}`} />
+            ) : (
+              <div id="upload-profile-placeholder">
+                <img src="/images/icons/camera.png"></img>
+                <span>이미지를 업로드해주세요.</span>
+              </div>
+            )
+            )
+            }
           </Upload>
         </Form.Item>
         <Form.Item
