@@ -9,6 +9,7 @@ import RegisterPage from "./register/index";
 import MyPage from "./mypage/index";
 import MypageUpdatePage from "./mypageUpdate";
 import Kakaomap from "./kakaomap/kakao"
+import Myproduct from "./myproduct/index"
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
@@ -218,6 +219,9 @@ function App() {
           </Route>
           <Route exact={true} path="/mypageupdate">
             <MypageUpdatePage/>
+          </Route>
+          <Route exact={true} path="/myproduct">
+            <Myproduct/>
           </Route>
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />

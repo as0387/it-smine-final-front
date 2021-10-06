@@ -4,10 +4,8 @@ import React from "react";
 import {useState} from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
-import dayjs from "dayjs";
 import { Button, message, InputNumber, Form, Spin, Space, Avatar, Progress, Upload, Input } from "antd";
-import {UserOutlined, ShoppingCartOutlined} from '@ant-design/icons';
-import { Link } from "react-router-dom";
+
 
 
 function MyPageupdateForm() {
@@ -35,12 +33,20 @@ function MyPageupdateForm() {
 
   const onSubmit = (values) => {
     console.log(localStorage.getItem("Authorization"));
+    var nickname = values.nickname;
+    var email = values.email;
+    if(nickname == null){
+      nickname = user.nickname
+    }
+    if(email == null){
+      email = user.email
+    }
     axios
       .post(
         `${API_URL}/user-update`,
         {
-          title: values.nickname,
-          email: values.email,
+          nickname: nickname,
+          email: email,
           imageUrl: imageUrl,
         },
         config

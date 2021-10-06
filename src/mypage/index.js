@@ -88,7 +88,12 @@ function MyPage() {
             <div id="tradelist-button">
                 <div>
                     <ShoppingCartOutlined />
-                    <Button>일반상품 거래내역</Button>
+                    <Button
+                    onClick= {function() {
+                      history.push("/myproduct");
+                    }
+                    }
+                    >일반상품 거래내역</Button>
                 </div>
                 <div>
                     <ShoppingCartOutlined />
