@@ -37,9 +37,9 @@ function MyPageupdateForm() {
     console.log(localStorage.getItem("Authorization"));
     axios
       .post(
-        `${API_URL}/image/profile`,
+        `${API_URL}/user-update`,
         {
-          title: values.username,
+          title: values.nickname,
           email: values.email,
           imageUrl: imageUrl,
         },
@@ -101,8 +101,7 @@ function MyPageupdateForm() {
           </Upload>
         </Form.Item>
         <Form.Item
-          name="username"
-            
+          name="nickname"
         >
           <Input
             className="upload-name"
