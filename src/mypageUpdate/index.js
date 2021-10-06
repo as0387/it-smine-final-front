@@ -102,7 +102,7 @@ function MyPageupdateForm() {
         </Form.Item>
         <Form.Item
           name="username"
-          rules={[{ required: true, message: "닉네임을 입력해주세요." }]}    
+            
         >
           <Input
             className="upload-name"
@@ -113,7 +113,6 @@ function MyPageupdateForm() {
         </Form.Item>
         <Form.Item
           name="email"
-          rules={[{ required: true, message: "이메일을 입력해주세요" }]}    
         >
           <Input
             className="upload-name"
