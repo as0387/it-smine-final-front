@@ -4,18 +4,18 @@ import {
   Form,
   Input,
   InputNumber,
-  Upload,
   message,
   Select,
 } from "antd";
-import FormItem from "antd/lib/form/FormItem";
 import { useCallback, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import PicturesWall from "../picturesWall";
 
 const { Option } = Select;
+var fileIdList = [];
 var priceTest = 0;
 var bidLimitTest = 0;
 
@@ -26,46 +26,71 @@ function handleChange(value) {
 
 function AuctionUpload() {
   const config = {
-    headers: { Authorization: localStorage.getItem("Authorization") },
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: localStorage.getItem("Authorization"),
+    },
   };
-  const [imageUrl, setImageUrl] = useState(null);
-  const [imageUrl2, setImageUrl2] = useState(null);
+  const [fileIds, setFileIds] = useState([]);
+
   const history = useHistory();
 
-  // const limtCheck = useCallback((_, value) => {
-  //   console.log(priceTest + bidLimitTest);
-  //   if (parseInt(value) <= priceTest + bidLimitTest) {
-  //     return Promise.reject(
-  //       new Error(
-  //         "상한가가 경매가보다 낮거나 (경매가 + 최소입찰 금액) 보다 낮습니다."
-  //       )
-  //     );
-  //   }
-  //   return Promise.resolve();
-  // }, []);
+  const limtCheck = useCallback((_, value) => {
+    let limitPrice = parseInt(value);
+    if (limitPrice <= priceTest + bidLimitTest) {
+      return Promise.reject(
+        new Error(
+          "상한가가 경매가보다 낮거나 (경매가 + 최소입찰 금액) 보다 낮습니다."
+        )
+      );
+    }
+    if (limitPrice % bidLimitTest != 0) {
+      return Promise.reject(
+        new Error("상한가를 최소 입찰 단위에 나누어 떨어지게 설정해 주세요.")
+      );
+    }
+    return Promise.resolve();
+  }, []);
 
-  // const priceTestCheck = useCallback((_, value) => {
-  //   priceTest = parseInt(value);
-  //   return false;
-  // }, []);
+  function priceChange(value) {
+    console.log(value);
+    for (var a in fileIds) console.log(a);
+    priceTest = value;
+  }
+  const getTextValue = (fileId) => {
+    fileIdList.push(fileId);
+    if (fileIdList.length === 2) {
+      setFileIds(fileIdList);
+    }
+  };
 
   const onSubmit = (values) => {
-    console.log(values.endTime);
+    const formData = new FormData();
+    const data1 = {
+      title: values.title,
+      description: values.description,
+      endTime: parseInt(values.endTime),
+      bid: parseInt(values.bid),
+      minBidUnit: parseInt(values.minBidUnit),
+      bidLimit: parseInt(values.bidLimit),
+      type: 1,
+    };
+    const data2 = {
+      fileIdList: fileIds,
+    };
+    console.log(JSON.stringify(data2));
+    formData.append(
+      "post1",
+      new Blob([JSON.stringify(data1)], { type: "application/json" })
+    );
+    formData.append(
+      "post2",
+      new Blob([JSON.stringify(data2)], { type: "application/json" })
+    );
+    console.log(formData.get);
+
     axios
-      .post(
-        `${API_URL}/nomalAuctionPost`,
-        {
-          title: values.title,
-          description: values.description,
-          endTime: parseInt(values.endTime),
-          bid: parseInt(values.bid),
-          minBidUnit: parseInt(values.minBidUnit),
-          bidLimit: parseInt(values.bidLimit),
-          imageUrl: imageUrl,
-          type: 1,
-        },
-        config
-      )
+      .post(`${API_URL}/nomalAuctionPost`, formData, config)
       .then((result) => {
         console.log(result);
         history.replace("/");
@@ -74,44 +99,8 @@ function AuctionUpload() {
         console.error(error);
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
-    // axios
-    //   .post(`https://75bee61c1be4.ngrok.io/products`, {
-    //     title: values.title,
-    //     description: values.description,
-    //     price: parseInt(values.price),
-    //     imageUrl: imageUrl2,
-    //   })
-    //   .then((result) => {
-    //     console.log(result);
-    //     history.replace("/");
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     message.error(`에러가 발생했습니다. ${error.message}`);
-    //   });
-  };
-  const onChangeImage = (info) => {
-    console.log(info.file.status);
-    if (info.file.status === "uploading") {
-      return;
-    }
-    if (info.file.status === "done") {
-      const imageUrl = info.file.response;
-      setImageUrl(imageUrl);
-    }
   };
 
-  const onChangeImage2 = (info) => {
-    console.log(info.file.status);
-    if (info.file.status === "uploading") {
-      return;
-    }
-    if (info.file.status === "done") {
-      const response = info.file.response;
-      const imageUrl2 = response.imageUrl;
-      setImageUrl2(imageUrl2);
-    }
-  };
   return (
     <div id="upload-container">
       <Form name="상품 업로드" onFinish={onSubmit}>
@@ -119,43 +108,9 @@ function AuctionUpload() {
           name="upload"
           label={<div className="upload-label">상품 사진</div>}
         >
-          <Upload
-            name="image"
-            action={`${API_URL}/image`}
-            listType="picture"
-            showUploadList={false}
-            onChange={onChangeImage}
-          >
-            {imageUrl ? (
-              <img id="upload-img" src={`${API_URL}${imageUrl}`} />
-            ) : (
-              <div id="upload-img-placeholder">
-                <img src="/images/icons/camera.png"></img>
-                <span>이미지를 업로드해주세요.</span>
-              </div>
-            )}
-          </Upload>
-          <Upload
-            name="image"
-            action={`https://75bee61c1be4.ngrok.io/image`}
-            listType="picture"
-            showUploadList={false}
-            onChange={onChangeImage2}
-          >
-            {imageUrl2 ? (
-              <img
-                id="upload-img"
-                src={`https://75bee61c1be4.ngrok.io/${imageUrl2}`}
-              />
-            ) : (
-              <div id="upload-img-placeholder">
-                <img src="/images/icons/camera.png"></img>
-                <span>이미지를 업로드해주세요.</span>
-              </div>
-            )}
-          </Upload>
+          <PicturesWall getTextValue={getTextValue} />
         </Form.Item>
-
+        <Divider />
         <Form.Item
           name="title"
           label={<div className="upload-label">상품 이름</div>}
@@ -181,14 +136,12 @@ function AuctionUpload() {
         <Form.Item
           name="bid"
           label={<div className="upload-label">경매시작가</div>}
-          rules={[
-            { required: true, message: "경매 시작가를 입력해주세요" },
-            //{ validator: priceTestCheck },
-          ]}
+          rules={[{ required: true, message: "경매 시작가를 입력해주세요" }]}
         >
           <InputNumber
             className="upload-price"
             size="large"
+            onChange={priceChange}
             defaultValue={0}
           ></InputNumber>
         </Form.Item>
@@ -218,21 +171,10 @@ function AuctionUpload() {
           label={<div className="upload-label">상한가</div>}
           rules={[
             { required: true, message: "상한가를 입력해주세요" },
-            // {
-            //   validator: limtCheck,
-            // },
+            {
+              validator: limtCheck,
+            },
           ]}
-        >
-          <InputNumber
-            className="upload-price"
-            size="large"
-            defaultValue={0}
-          ></InputNumber>
-        </Form.Item>
-        <Form.Item
-          name="buyNowPrice"
-          label={<div className="upload-label">즉시 구매가</div>}
-          rules={[{ required: true, message: "즉시구매가를 입력해주세요" }]}
         >
           <InputNumber
             className="upload-price"
