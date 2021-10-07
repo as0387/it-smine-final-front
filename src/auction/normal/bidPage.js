@@ -44,7 +44,7 @@ const App = (props) => {
     if (product.bidder == null) {
       return "입찰자 없음";
     }
-    let bidder = product.bidder.username;
+    let bidder = product.bidder.nickname;
     return bidder;
   };
 
@@ -59,7 +59,7 @@ const App = (props) => {
     },
     {
       title: "판매자명",
-      content: product.user.username,
+      content: product.user.nickname,
     },
     {
       title: "판매 지역",
@@ -70,14 +70,18 @@ const App = (props) => {
       content: `${product.bid}원 : ${checkBidder()}`,
     },
     {
-      title: "즉시 구매가",
-      content: "100000원",
+      title: "상한가(즉시구매가) 및 최소 입찰 단위",
+      content: `${product.bidLimit}원 / ${product.minBidUnit}`,
     },
   ];
   const bidPost = (values) => {
-    console.log(values);
     if (product.bid > parseInt(values.bid)) {
       message.error(`입찰금액이 현재 가격보다 낮습니다...`);
+    } else if (product.bidder != null) {
+      if (product.bidder.id === userId)
+        message.error(`이미 입찰 하셨습니다.....`);
+    } else if (product.user.id === userId) {
+      message.error(`본인의 상품은 입찰하실 수 없습니다......`);
     } else {
       axios
         .put(
@@ -92,7 +96,6 @@ const App = (props) => {
           config
         )
         .then((result) => {
-          console.log(result);
           message.success("입찰되었습니다!");
           history.replace(`/products/${id}`);
           handleOk();
@@ -149,7 +152,9 @@ const App = (props) => {
           dataSource={data}
           renderItem={(item) => (
             <List.Item>
-              <Card title={item.title}>{item.content}</Card>
+              <Card title={item.title} style={{ fontSize: 25 }}>
+                {item.content}
+              </Card>
             </List.Item>
           )}
         />
@@ -159,7 +164,11 @@ const App = (props) => {
             name="bid"
             label={<div className="upload-label">입찰가격(원)</div>}
             rules={[
-              { required: true, message: "ㅤㅤ상품 가격을 입력해주세요" },
+              { required: true, message: "ㅤㅤ입찰 가격을 입력해주세요" },
+              {
+                required: function () {},
+                message: "최소 입찰 단위에 맞게 입찰해 주세요! ",
+              },
             ]}
             style={{ marginLeft: 40, float: "left" }}
           >
@@ -178,7 +187,7 @@ const App = (props) => {
             htmlType
             style={{ marginRight: 20, marginLeft: 10, float: "left" }}
           >
-            입찰하기
+            입찰 하기
           </Button>
         </Form>
         <Button
@@ -190,7 +199,7 @@ const App = (props) => {
           onClick=""
           style={{ top: -3, marginLeft: 10 }}
         >
-          즉시구매
+          즉시 구매
         </Button>
       </Modal>
     </>
