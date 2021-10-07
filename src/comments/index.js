@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
 import "./index.css";
 import { Comment, Avatar, Form, Button, List, Input } from "antd";
@@ -28,13 +27,14 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
         onClick={onSubmit}
         type="primary"
       >
-        Add Comment
+        댓글 달기
       </Button>
     </Form.Item>
   </>
 );
 
 class App extends React.Component {
+  
   state = {
     comments: [],
     submitting: false,
@@ -42,9 +42,7 @@ class App extends React.Component {
   };
 
   handleSubmit = () => {
-    if (!this.state.value) {
-      return;
-    }
+    
 
     this.setState({
       submitting: true,
@@ -57,9 +55,9 @@ class App extends React.Component {
         comments: [
           ...this.state.comments,
           {
-            author: "Its Mine",
+            author: "dd",
             avatar:
-              "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+              "",
             content: <p>{this.state.value}</p>,
             datetime: moment().fromNow(),
           },
@@ -83,7 +81,7 @@ class App extends React.Component {
         <Comment
           avatar={
             <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              src=""
               alt="Its Mine"
             />
           }

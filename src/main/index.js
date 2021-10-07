@@ -51,7 +51,7 @@ function MainPage() {
                 <div>
                   <img
                     className="product-img"
-                    src={`${API_URL}${product.imageUrl}`}
+                    src={`${API_URL}${product.photos[0].imageUrl}`}
                   />
                 </div>
                 <div className="product-contents">

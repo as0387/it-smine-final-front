@@ -9,6 +9,7 @@ import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
 import Comment from "../comments/index";
 import BidPage from "../auction/normal/bidPage";
+import Commnets from "../comments/comments";
 
 function ProductPage() {
   const config = {
@@ -17,6 +18,7 @@ function ProductPage() {
   const { id } = useParams();
   const [userId, setuserId] = useState();
   const [product, setProduct] = useState(null);
+  const [user, setUser] = useState(null);
   const history = useHistory();
 
   const getProduct = () => {
@@ -54,6 +56,17 @@ function ProductPage() {
       getProduct();
       setuserId(jwt_decode(jwtToken).id);
     }
+
+    axios
+      .get(`${API_URL}/user-info`, config)
+      .then((result) => {
+        console.log(result);
+        //실제 데이터로 변경
+        setUser(result.data);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
   }, [id, product]);
 
   if (product === null) {
@@ -162,7 +175,7 @@ function ProductPage() {
           })}
         </div>
       </div> */}
-      <Comment />
+      <Commnets />
     </div>
   );
 }

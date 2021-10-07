@@ -44,13 +44,13 @@ function MyPage() {
             <div>
             {
             user.profileImageUrl.startsWith("/") ? (
-              user.profileImageUrl ? (
-              <img id="upload-profile" src={`${API_URL}${user.profileImageUrl}`} />
-            ) : (
-              <div id="upload-profile-placeholder">
+              user.profileImageUrl == "/" ? (
+                <div id="upload-profile-placeholder">
                 <img src="/images/icons/camera.png"></img>
                 <span>이미지를 업로드해주세요.</span>
-              </div>
+                </div>
+            ) : (
+              <img id="upload-profile" src={`${API_URL}${user.profileImageUrl}`} />
             )
             ) : (
               user.profileImageUrl ? (

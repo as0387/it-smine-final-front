@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
     "geocoder": "^0.2.3",
+    "gitalk": "^1.7.2",
     "jwt-decode": "^3.1.2",
     "kakao": "^0.4.1",
     "kakaojs": "^1.2.0",
