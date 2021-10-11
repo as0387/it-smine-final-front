@@ -59,9 +59,7 @@ function AuctionUpload() {
   }
   const getTextValue = (fileId) => {
     fileIdList.push(fileId);
-    if (fileIdList.length === 2) {
-      setFileIds(fileIdList);
-    }
+    setFileIds(fileIdList);
   };
 
   const onSubmit = (values) => {

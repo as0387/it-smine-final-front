@@ -39,11 +39,9 @@ class PicturesWall extends React.Component {
 
   handleChange = (info) => {
     console.log(info);
-    if (info.fileList.length <= 3) {
-      var fileList = info.fileList;
-      this.setState({ fileList });
-      this.onChangeImage(info);
-    }
+    var fileList = info.fileList;
+    this.setState({ fileList });
+    this.onChangeImage(info);
   };
   onChangeImage = (info) => {
     console.log(info.file.status);
