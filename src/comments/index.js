@@ -55,7 +55,7 @@ class App extends React.Component {
         {
           postId: this.props.id,
           userId: this.props.user.id,
-          content: this.state.value,
+          content:this.state.value,
         },
         config
       )
@@ -110,9 +110,10 @@ class App extends React.Component {
         
         {comments.length > 0 && <CommentList comments={comments} />}
         <Comment
+          
           avatar={
             <Avatar
-              src=""
+              src= {this.props.user.profileImageUrl}
               alt="Its Mine"
             />
           }

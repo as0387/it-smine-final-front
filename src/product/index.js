@@ -21,7 +21,6 @@ function ProductPage() {
   const history = useHistory();
   
   
-  
 
   const getProduct = () => {
     axios
@@ -69,7 +68,7 @@ function ProductPage() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
-  }, [id, product]);
+  }, []);
 
   if (product === null) {
     return (
@@ -87,13 +86,25 @@ function ProductPage() {
     return({
       author: reply.user.nickname,
       avatar: reply.user.profileImageUrl,
-      content: <p>{reply.content}</p>,
+      content: <p>{reply.content}{userId === reply.user.id ? <Button onClick={() => deleteComment(reply.id)}>삭제</Button> : ""}</p>,
       datetime: dayjs(reply.createDate).fromNow(),
     }
     )
   });
 
   comments.reverse();
+
+  const deleteComment = (id2) => {
+    axios
+      .delete(`${API_URL}/product/${id}/reply/${id2}`, config)
+      .then((result) => {
+        alert("삭제완료");
+      })
+      .catch((error) => {
+        console.error(error);
+        message.error(`에러가 발생했습니다. ${error.message}`);
+      });
+  };
 
   const onClickPurchase = () => {
     axios
