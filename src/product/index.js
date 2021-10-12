@@ -1,6 +1,6 @@
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
@@ -9,6 +9,15 @@ import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
 import BidPage from "../auction/normal/bidPage";
 import Commnets from "../comments/index";
+
+
+import { render } from "@testing-library/react";
+import { Carousel } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
+
 
 function ProductPage() {
   const config = {
@@ -19,6 +28,8 @@ function ProductPage() {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState(null);
   const history = useHistory();
+
+
   
   
 
@@ -27,6 +38,7 @@ function ProductPage() {
       .get(`${API_URL}/products/${id}`, config)
       .then((result) => {
         setProduct(result.data);
+        console.log(result.data);
       })
       .catch((error) => {
         console.error("에러!", error);
@@ -46,6 +58,7 @@ function ProductPage() {
       });
   };
 
+
   useEffect(function () {
     let jwtTokenTemp = localStorage.getItem("Authorization");
 
@@ -61,14 +74,13 @@ function ProductPage() {
     axios
       .get(`${API_URL}/user-info`, config)
       .then((result) => {
-        console.log(result);
         //실제 데이터로 변경
         setUser(result.data);
       })
       .catch((error) => {
         console.error("에러발생!!", error);
       });
-  }, [id]);
+  }, [id,product]);
 
   if (product === null) {
     return (
@@ -92,13 +104,15 @@ function ProductPage() {
     )
   });
 
+
   comments.reverse();
 
   const deleteComment = (id2) => {
     axios
       .delete(`${API_URL}/product/${id}/reply/${id2}`, config)
       .then((result) => {
-        alert("삭제완료");
+        message.info("삭제완료.");
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
@@ -120,9 +134,22 @@ function ProductPage() {
 
   return (
     <div>
-      <div id="image-box">
-        <img src={`${API_URL}${product.imageUrl}`} />
-      </div>
+
+      <Carousel id="carousel" fade >
+        {product.photos.map(photo => {
+          return(
+          <Carousel.Item>
+          <img
+            height="500px"
+            className="d-block w-100"
+            src= {API_URL+photo.imageUrl}
+            alt="First slide"
+          />
+          </Carousel.Item>)
+        })}
+      </Carousel>
+
+      
 
       <div id="profile-box">
         <div>
@@ -192,6 +219,7 @@ function ProductPage() {
           <pre id="description">{product.description}</pre>
         </div>
       </div>
+      
       {/* <div>
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -200,7 +228,7 @@ function ProductPage() {
           })}
         </div>
       </div> */}
-      <Commnets product={product} id ={id} user={user} comments={comments}  />
+      <Commnets product={product} id ={id} user={user} comments={comments} deleteComment={deleteComment}  />
     </div>
   );
 }

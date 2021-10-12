@@ -1,11 +1,10 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
-import { Comment, Avatar, Form, Button, List, Input } from "antd";
+import { Comment, Avatar, Form, Button, List, Input, message } from "antd";
 import moment from "moment";
 import axios from "axios";
 import { API_URL } from "../config/constants.js";
-import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -35,6 +34,18 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
     </Form.Item>
   </>
 );
+
+// const deleteComment = (id2) => {
+//     axios
+//       .delete(`${API_URL}/product/${this.props.id}/reply/${id2}`, config)
+//       .then((result) => {
+//         message.info("삭제완료.");
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//         message.error(`에러가 발생했습니다. ${error.message}`);
+//       });
+//   };
 
 const config = {
     headers: { Authorization: localStorage.getItem("Authorization") },
@@ -87,7 +98,7 @@ class App extends React.Component {
           {
             author: this.props.user.nickname,
             avatar: `${this.props.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : this.props.user.profileImageUrl }`,
-            content: <p>{this.state.value}</p>,
+            content: <p>{this.state.value}{<Button onClick={() => this.props.deleteComment(this.id)}>삭제</Button>}</p>,
             datetime: moment().fromNow(),
           },
         ],
