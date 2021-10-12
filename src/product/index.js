@@ -7,9 +7,8 @@ import dayjs from "dayjs";
 import { Button, message, InputNumber, Form, Spin, Space } from "antd";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
-import Comment from "../comments/index";
 import BidPage from "../auction/normal/bidPage";
-import Commnets from "../comments/comments";
+import Commnets from "../comments/index";
 
 function ProductPage() {
   const config = {
@@ -20,6 +19,9 @@ function ProductPage() {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState(null);
   const history = useHistory();
+  
+  
+  
 
   const getProduct = () => {
     axios
@@ -80,6 +82,18 @@ function ProductPage() {
       </div>
     );
   }
+
+  const comments = product.replys.map(reply => {
+    return({
+      author: reply.user.nickname,
+      avatar: reply.user.profileImageUrl,
+      content: <p>{reply.content}</p>,
+      datetime: dayjs(reply.createDate).fromNow(),
+    }
+    )
+  });
+
+  comments.reverse();
 
   const onClickPurchase = () => {
     axios
@@ -175,7 +189,7 @@ function ProductPage() {
           })}
         </div>
       </div> */}
-      <Commnets />
+      <Commnets product={product} id ={id} user={user} comments={comments}  />
     </div>
   );
 }

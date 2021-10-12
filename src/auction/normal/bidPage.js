@@ -113,7 +113,7 @@ const App = (props) => {
       <Countdown
         title="남은시간:"
         value={deadline}
-        valueStyle={{ fontSize: 30 }}
+        valueStyle={{ fontSize: 23 }}
         onFinish={onFinish}
         format="D 일 H : m : s"
       />

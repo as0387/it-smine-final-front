@@ -3,6 +3,9 @@ import "antd/dist/antd.css";
 import "./index.css";
 import { Comment, Avatar, Form, Button, List, Input } from "antd";
 import moment from "moment";
+import axios from "axios";
+import { API_URL } from "../config/constants.js";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -33,31 +36,57 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
   </>
 );
 
+const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
+
 class App extends React.Component {
-  
   state = {
-    comments: [],
+    comments: this.props.comments,
     submitting: false,
     value: "",
   };
 
-  handleSubmit = () => {
-    
+  
+  postComments = () => {
+    axios
+      .post(
+        `${API_URL}/product/${this.props.id}/reply`,
+        {
+          postId: this.props.id,
+          userId: this.props.user.id,
+          content: this.state.value,
+        },
+        config
+      )
+      .then((result) => {
+        console.log("댓글달기완료!!");
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log("댓글실패!!!!!")
+        console.error(error);
+      });
+  }
+  
 
+  handleSubmit = () => {
+    console.log(this.props)
+    this.postComments()
     this.setState({
       submitting: true,
     });
-
+    
     setTimeout(() => {
+      
       this.setState({
         submitting: false,
         value: "",
         comments: [
           ...this.state.comments,
           {
-            author: "dd",
-            avatar:
-              "",
+            author: this.props.user.nickname,
+            avatar: this.props.user.profileImageUrl,
             content: <p>{this.state.value}</p>,
             datetime: moment().fromNow(),
           },
@@ -72,11 +101,13 @@ class App extends React.Component {
     });
   };
 
+ 
+
   render() {
     const { comments, submitting, value } = this.state;
-
     return (
       <>
+        
         {comments.length > 0 && <CommentList comments={comments} />}
         <Comment
           avatar={
