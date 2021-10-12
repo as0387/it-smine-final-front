@@ -86,7 +86,7 @@ class App extends React.Component {
           ...this.state.comments,
           {
             author: this.props.user.nickname,
-            avatar: this.props.user.profileImageUrl,
+            avatar: `${this.props.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : this.props.user.profileImageUrl }`,
             content: <p>{this.state.value}</p>,
             datetime: moment().fromNow(),
           },
@@ -113,7 +113,7 @@ class App extends React.Component {
           
           avatar={
             <Avatar
-              src= {this.props.user.profileImageUrl}
+              src= {this.props.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : this.props.user.profileImageUrl }
               alt="Its Mine"
             />
           }

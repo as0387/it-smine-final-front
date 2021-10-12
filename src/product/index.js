@@ -68,7 +68,7 @@ function ProductPage() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
-  }, []);
+  }, [id]);
 
   if (product === null) {
     return (
@@ -85,7 +85,7 @@ function ProductPage() {
   const comments = product.replys.map(reply => {
     return({
       author: reply.user.nickname,
-      avatar: reply.user.profileImageUrl,
+      avatar: reply.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : reply.user.profileImageUrl ,
       content: <p>{reply.content}{userId === reply.user.id ? <Button onClick={() => deleteComment(reply.id)}>삭제</Button> : ""}</p>,
       datetime: dayjs(reply.createDate).fromNow(),
     }
