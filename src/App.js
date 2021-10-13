@@ -1,5 +1,6 @@
 import "antd/dist/antd.css";
 import "./App.css";
+import React from "react";
 import MainPageComponent from "./main/index.js";
 import UploadPage from "./upload";
 import AuctionUpload from "./auctionupload";
@@ -49,6 +50,13 @@ function App() {
 
   const isLogin = useSelector((store) => store.isLogin);
   const [user, setUser] = useState(null);
+
+  React.useEffect(() => {
+    let jwtToken = localStorage.getItem("Authorization");
+    if (jwtToken !== null) {
+      dispatch(login());
+    }
+  }, []);
 
   const upload = function () {
     if (!isLogin) {
@@ -127,34 +135,6 @@ function App() {
     </Menu>
   );
 
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/user-info`, config)
-      .then((result) => {
-        console.log(result);
-        //실제 데이터로 변경
-        setUser(result.data);
-      })
-      .catch((error) => {
-        console.error("에러발생!!", error);
-      });
-    let jwtToken = localStorage.getItem("Authorization");
-    if (jwtToken !== null) {
-      dispatch(login());
-    }
-  }, []);
-
-  if (user == null) {
-    return (
-      <div id="spin-spin">
-        <Space size="middle">
-          <Spin size="small" />
-          <Spin />
-          <Spin size="large" />
-        </Space>
-      </div>
-    );
-  }
   return (
     <div>
       <Affix offsetTop={0}>
@@ -168,13 +148,8 @@ function App() {
                 <div>
                   <Dropdown overlay={menu3} placement="bottomLeft" arrow>
                     <Button size="large" className="k-button3">
-                      {user.profileImageUrl.startsWith("/") ? (
-                        <img id="profile" src="/images/icons/avatar.png" />
-                      ) : (
-                        <img id="profile2" src={`${user.profileImageUrl}`} />
-                      )}
-
-                      {user.nickname}
+                      <img id="profile" src="/images/icons/avatar.png" />
+                      내정보
                     </Button>
                   </Dropdown>
                   <Button
