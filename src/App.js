@@ -128,11 +128,6 @@ function App() {
   );
 
   useEffect(() => {
-    let jwtToken = localStorage.getItem("Authorization");
-    if (jwtToken !== null) {
-      dispatch(login());
-    }
-
     axios
       .get(`${API_URL}/user-info`, config)
       .then((result) => {
@@ -143,6 +138,10 @@ function App() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
+    let jwtToken = localStorage.getItem("Authorization");
+    if (jwtToken !== null) {
+      dispatch(login());
+    }
   }, []);
 
   if (user == null) {
