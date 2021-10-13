@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { Spin, Space, Form, Button, Input } from "antd";
 import {} from "react-bootstrap";
 import { valueToNode } from "@babel/types";
+import { useCallback } from "react";
 
 function ChatPage() {
   const config = {
@@ -20,6 +21,9 @@ function ChatPage() {
   const [user, setUser] = useState(null);
   const [chats, setChat] = React.useState([]);
   const [messages, setMessages] = React.useState([]);
+  const [, updatteState] = useState();
+  const forceUpdate = useCallback(() => updatteState({}), []);
+
   React.useEffect(function () {
     axios
       .get(`${API_URL}/user-info`, config)
@@ -43,8 +47,7 @@ function ChatPage() {
       });
   }, []);
 
-  const chatRoom = (e) => {
-    chatroomid = e.target.getAttribute("data-arg1");
+  const chatRoom = () => {
     console.log(chatroomid);
     axios
       .get(`${API_URL}/chat/${chatroomid}`, config)
@@ -52,6 +55,9 @@ function ChatPage() {
         console.log(result.data.messages);
         //실제 데이터로 변경
         setMessages(result.data.messages);
+        var objDiv = document.getElementById("chat-content");
+
+        objDiv.scrollTop = objDiv.scrollHeight;
       })
       .catch((error) => {
         console.error("에러발생!!", error);
@@ -61,13 +67,14 @@ function ChatPage() {
 
   const onClickPurchase = (values) => {
     console.log(values.message);
-    axios
-      .post(
-        `${API_URL}/chat`,
-        { writerId: user.id, roomId: 2, message: values.message },
-        config
-      )
+    axios.post(
+      `${API_URL}/chat`,
+      { writerId: user.id, roomId: chatroomid, message: values.message },
+      config
+    );
+    chatRoom()
       .then((result) => {
+        chatRoom();
         console.log(result);
       })
       .catch((error) => {
@@ -93,6 +100,9 @@ function ChatPage() {
         <div class="row">
           <div class="col-3 p-0">
             {chats.map((chat) => {
+              chatroomid = chat.chatRoomId;
+              setTimeout(chatRoom, 5000);
+              clearTimeout(chatRoom);
               return (
                 <ul class="list-group chat-list">
                   <Button
@@ -108,18 +118,20 @@ function ChatPage() {
           </div>
           <div class="col-9 p-0">
             <div class="chat-room">
-              <ul class="list-group chat-content">
-                {messages.map((msg) => {
-                  return msg.writer.id == user.id ? (
-                    <li>
-                      <span class="chat-box mine">{msg.message}</span>
-                    </li>
-                  ) : (
-                    <li>
-                      <span class="chat-box">{msg.message}</span>
-                    </li>
-                  );
-                })}
+              <ul class="list-group chat-content" id="chat-content">
+                {messages
+                  .map((msg) => {
+                    return msg.writer.id == user.id ? (
+                      <li>
+                        <span class="chat-box mine">{msg.message}</span>
+                      </li>
+                    ) : (
+                      <li>
+                        <span class="chat-box">{msg.message}</span>
+                      </li>
+                    );
+                  })
+                  .reverse()}
               </ul>
               <div class="input-group">
                 <Form onFinish={onClickPurchase}>
