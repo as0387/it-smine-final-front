@@ -6,7 +6,7 @@ import {
   InputNumber,
   Upload,
   message,
-  Select
+  Select,
 } from "antd";
 import { useState } from "react";
 import "./index.css";
@@ -18,8 +18,6 @@ import PicturesWall from "../picturesWall";
 const { Option } = Select;
 var fileIdList = [];
 
-
-
 function UploadPage() {
   const config = {
     headers: { Authorization: localStorage.getItem("Authorization") },
@@ -28,7 +26,6 @@ function UploadPage() {
   const history = useHistory();
   const [fileIds, setFileIds] = useState([]);
 
-  
   const getTextValue = (fileId) => {
     fileIdList.push(fileId);
     setFileIds(fileIdList);
@@ -40,7 +37,7 @@ function UploadPage() {
       title: values.title,
       description: values.description,
       price: values.price,
-      type: 1,
+      type: 0,
     };
     const data2 = {
       fileIdList: fileIds,
@@ -66,24 +63,23 @@ function UploadPage() {
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
   };
-    //추천 서버이니까 나중에 추가하시오.
-    // axios
-    //   .post(`https://75bee61c1be4.ngrok.io/products`, {
-    //     title: values.title,
-    //     description: values.description,
-    //     price: parseInt(values.price),
-    //     imageUrl: imageUrl2,
-    //   })
-    //   .then((result) => {
-    //     console.log(result);
-    //     history.replace("/");
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     message.error(`에러가 발생했습니다. ${error.message}`);
-    //   });
-  
- 
+  //추천 서버이니까 나중에 추가하시오.
+  // axios
+  //   .post(`https://75bee61c1be4.ngrok.io/products`, {
+  //     title: values.title,
+  //     description: values.description,
+  //     price: parseInt(values.price),
+  //     imageUrl: imageUrl2,
+  //   })
+  //   .then((result) => {
+  //     console.log(result);
+  //     history.replace("/");
+  //   })
+  //   .catch((error) => {
+  //     console.error(error);
+  //     message.error(`에러가 발생했습니다. ${error.message}`);
+  //   });
+
   return (
     <div id="upload-container">
       <Form name="상품 업로드" onFinish={onSubmit}>

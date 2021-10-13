@@ -255,7 +255,7 @@ function App() {
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
           </Route>
-          <Route exact={true} path="/chatpage">
+          <Route exact={true} path="/chatpage/:id?">
             <ChatPage />
           </Route>
         </Switch>

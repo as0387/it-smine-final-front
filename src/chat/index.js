@@ -6,15 +6,20 @@ import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
-import { Spin, Space } from "antd";
+import { Spin, Space, Form, Button, Input } from "antd";
 import {} from "react-bootstrap";
+import { valueToNode } from "@babel/types";
 
 function ChatPage() {
   const config = {
     headers: { Authorization: localStorage.getItem("Authorization") },
   };
+
+  var chatroomid;
   const history = useHistory();
   const [user, setUser] = useState(null);
+  const [chats, setChat] = React.useState([]);
+  const [messages, setMessages] = React.useState([]);
   React.useEffect(function () {
     axios
       .get(`${API_URL}/user-info`, config)
@@ -26,9 +31,51 @@ function ChatPage() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
+
+    axios
+      .get(`${API_URL}/chat-list`, config)
+      .then((result) => {
+        console.log(result.data);
+        setChat(result.data);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
   }, []);
 
-  if (user === null) {
+  const chatRoom = (e) => {
+    chatroomid = e.target.getAttribute("data-arg1");
+    console.log(chatroomid);
+    axios
+      .get(`${API_URL}/chat/${chatroomid}`, config)
+      .then((result) => {
+        console.log(result.data.messages);
+        //실제 데이터로 변경
+        setMessages(result.data.messages);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
+    return true;
+  };
+
+  const onClickPurchase = (values) => {
+    console.log(values.message);
+    axios
+      .post(
+        `${API_URL}/chat`,
+        { writerId: user.id, roomId: 2, message: values.message },
+        config
+      )
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  if (messages === null) {
     return (
       <div id="spin-spin">
         <Space size="middle">
@@ -39,113 +86,56 @@ function ChatPage() {
       </div>
     );
   }
+
   return (
     <>
       <div class="container p-4 detail">
         <div class="row">
           <div class="col-3 p-0">
-            <ul class="list-group chat-list">
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-              <button class="list-group-item">
-                <h6>채팅방1</h6>
-                <h6 class="text-small">채팅방아이디</h6>
-              </button>
-            </ul>
+            {chats.map((chat) => {
+              return (
+                <ul class="list-group chat-list">
+                  <Button
+                    onClick={chatRoom}
+                    class="list-group-item"
+                    data-arg1={chat.chatRoomId}
+                  >
+                    <h6>{chat.opponentUserName} 님과의채팅</h6>
+                  </Button>
+                </ul>
+              );
+            })}
           </div>
           <div class="col-9 p-0">
             <div class="chat-room">
               <ul class="list-group chat-content">
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box mine">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box mine">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box mine">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box mine">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box mine">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box">채팅방1 내용</span>
-                </li>
-                <li>
-                  <span class="chat-box mine">채팅방1 내용</span>
-                </li>
+                {messages.map((msg) => {
+                  return msg.writer.id == user.id ? (
+                    <li>
+                      <span class="chat-box mine">{msg.message}</span>
+                    </li>
+                  ) : (
+                    <li>
+                      <span class="chat-box">{msg.message}</span>
+                    </li>
+                  );
+                })}
               </ul>
               <div class="input-group">
-                <input class="form-control" id="chat-input" />
-                <button class="btn btn-secondary" id="send">
-                  전송
-                </button>
+                <Form onFinish={onClickPurchase}>
+                  <Form.Item name="message">
+                    <Input
+                      className="upload-name"
+                      size="large"
+                      placeholder="메세지를 입력해주세요."
+                    ></Input>
+                  </Form.Item>
+                  <Form.Item>
+                    <Button id="submit" type="primary" size="large" htmlType>
+                      전송
+                    </Button>
+                  </Form.Item>
+                </Form>
               </div>
             </div>
           </div>

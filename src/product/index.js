@@ -125,12 +125,17 @@ function ProductPage() {
 
   const onClickPurchase = () => {
     axios
-      .post(`${API_URL}/purchase/${id}`)
+      .post(
+        `${API_URL}/chat/newChat`,
+        { userId1: userId, userId2: product.user.id },
+        config
+      )
       .then((result) => {
-        message.info("구매가 완료되었습니다.");
-        getProduct();
+        console.log(result.data);
+        history.replace(`/chatpage/${result.data}`);
       })
       .catch((error) => {
+        console.error(error);
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
   };
