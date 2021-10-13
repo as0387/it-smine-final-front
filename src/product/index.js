@@ -10,14 +10,9 @@ import { Link } from "react-router-dom";
 import BidPage from "../auction/normal/bidPage";
 import Commnets from "../comments/index";
 
-
 import { render } from "@testing-library/react";
 import { Carousel } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function ProductPage() {
   const config = {
@@ -28,10 +23,6 @@ function ProductPage() {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState(null);
   const history = useHistory();
-
-
-  
-  
 
   const getProduct = () => {
     axios
@@ -58,29 +49,31 @@ function ProductPage() {
       });
   };
 
+  useEffect(
+    function () {
+      let jwtTokenTemp = localStorage.getItem("Authorization");
 
-  useEffect(function () {
-    let jwtTokenTemp = localStorage.getItem("Authorization");
+      if (jwtTokenTemp === null) {
+        message.error("로그인 후 이용가능합니다!");
+        history.push("/login");
+      } else {
+        let jwtToken = jwtTokenTemp.replace("Bearer ", "");
+        getProduct();
+        setuserId(jwt_decode(jwtToken).id);
+      }
 
-    if (jwtTokenTemp === null) {
-      message.error("로그인 후 이용가능합니다!");
-      history.push("/login");
-    } else {
-      let jwtToken = jwtTokenTemp.replace("Bearer ", "");
-      getProduct();
-      setuserId(jwt_decode(jwtToken).id);
-    }
-
-    axios
-      .get(`${API_URL}/user-info`, config)
-      .then((result) => {
-        //실제 데이터로 변경
-        setUser(result.data);
-      })
-      .catch((error) => {
-        console.error("에러발생!!", error);
-      });
-  }, [id,product]);
+      axios
+        .get(`${API_URL}/user-info`, config)
+        .then((result) => {
+          //실제 데이터로 변경
+          setUser(result.data);
+        })
+        .catch((error) => {
+          console.error("에러발생!!", error);
+        });
+    },
+    [id, product]
+  );
 
   if (product === null) {
     return (
@@ -94,16 +87,26 @@ function ProductPage() {
     );
   }
 
-  const comments = product.replys.map(reply => {
-    return({
+  const comments = product.replys.map((reply) => {
+    return {
       author: reply.user.nickname,
-      avatar: reply.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : reply.user.profileImageUrl ,
-      content: <p>{reply.content}{userId === reply.user.id ? <Button onClick={() => deleteComment(reply.id)}>삭제</Button> : ""}</p>,
+      avatar:
+        reply.user.profileImageUrl === "/upload/public/avatar.png"
+          ? `${API_URL}/upload/public/avatar.png`
+          : reply.user.profileImageUrl,
+      content: (
+        <p>
+          {reply.content}
+          {userId === reply.user.id ? (
+            <Button onClick={() => deleteComment(reply.id)}>삭제</Button>
+          ) : (
+            ""
+          )}
+        </p>
+      ),
       datetime: dayjs(reply.createDate).fromNow(),
-    }
-    )
+    };
   });
-
 
   comments.reverse();
 
@@ -134,22 +137,20 @@ function ProductPage() {
 
   return (
     <div>
-
-      <Carousel id="carousel" fade >
-        {product.photos.map(photo => {
-          return(
-          <Carousel.Item>
-          <img
-            height="500px"
-            className="d-block w-100"
-            src= {API_URL+photo.imageUrl}
-            alt="First slide"
-          />
-          </Carousel.Item>)
+      <Carousel id="carousel" fade>
+        {product.photos.map((photo) => {
+          return (
+            <Carousel.Item>
+              <img
+                height="500px"
+                className="d-block w-100"
+                src={API_URL + photo.imageUrl}
+                alt="First slide"
+              />
+            </Carousel.Item>
+          );
         })}
       </Carousel>
-
-      
 
       <div id="profile-box">
         <div>
@@ -219,7 +220,7 @@ function ProductPage() {
           <pre id="description">{product.description}</pre>
         </div>
       </div>
-      
+
       {/* <div>
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -228,7 +229,13 @@ function ProductPage() {
           })}
         </div>
       </div> */}
-      <Commnets product={product} id ={id} user={user} comments={comments} deleteComment={deleteComment}  />
+      <Commnets
+        product={product}
+        id={id}
+        user={user}
+        comments={comments}
+        deleteComment={deleteComment}
+      />
     </div>
   );
 }
