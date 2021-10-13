@@ -1,9 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
 import "./index.css";
-import { Comment, Avatar, Form, Button, List, Input } from "antd";
+import { Comment, Avatar, Form, Button, List, Input, message } from "antd";
 import moment from "moment";
+import axios from "axios";
+import { API_URL } from "../config/constants.js";
 
 const { TextArea } = Input;
 
@@ -28,39 +29,76 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
         onClick={onSubmit}
         type="primary"
       >
-        Add Comment
+        댓글 달기
       </Button>
     </Form.Item>
   </>
 );
 
+// const deleteComment = (id2) => {
+//     axios
+//       .delete(`${API_URL}/product/${this.props.id}/reply/${id2}`, config)
+//       .then((result) => {
+//         message.info("삭제완료.");
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//         message.error(`에러가 발생했습니다. ${error.message}`);
+//       });
+//   };
+
+const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
+
 class App extends React.Component {
   state = {
-    comments: [],
+    comments: this.props.comments,
     submitting: false,
     value: "",
   };
 
-  handleSubmit = () => {
-    if (!this.state.value) {
-      return;
-    }
+  
+  postComments = () => {
+    axios
+      .post(
+        `${API_URL}/product/${this.props.id}/reply`,
+        {
+          postId: this.props.id,
+          userId: this.props.user.id,
+          content:this.state.value,
+        },
+        config
+      )
+      .then((result) => {
+        console.log("댓글달기완료!!");
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log("댓글실패!!!!!")
+        console.error(error);
+      });
+  }
+  
 
+  handleSubmit = () => {
+    console.log(this.props)
+    this.postComments()
     this.setState({
       submitting: true,
     });
-
+    
     setTimeout(() => {
+      
       this.setState({
         submitting: false,
         value: "",
         comments: [
           ...this.state.comments,
           {
-            author: "Its Mine",
-            avatar:
-              "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-            content: <p>{this.state.value}</p>,
+            author: this.props.user.nickname,
+            avatar: `${this.props.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : this.props.user.profileImageUrl }`,
+            content: <p>{this.state.value}{<Button onClick={() => this.props.deleteComment(this.id)}>삭제</Button>}</p>,
             datetime: moment().fromNow(),
           },
         ],
@@ -74,16 +112,19 @@ class App extends React.Component {
     });
   };
 
+ 
+
   render() {
     const { comments, submitting, value } = this.state;
-
     return (
       <>
+        
         {comments.length > 0 && <CommentList comments={comments} />}
         <Comment
+          
           avatar={
             <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              src= {this.props.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : this.props.user.profileImageUrl }
               alt="Its Mine"
             />
           }

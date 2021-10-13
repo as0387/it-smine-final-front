@@ -14,11 +14,10 @@ import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 
-const config = {
-  headers: { Authorization: localStorage.getItem("Authorization") },
-};
-
 function UpdateForm() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
   const [imageUrl, setImageUrl] = useState(null);
   const [imageUrl2, setImageUrl2] = useState(null);
   const { id } = useParams();

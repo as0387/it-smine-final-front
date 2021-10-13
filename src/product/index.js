@@ -1,32 +1,44 @@
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
 import { Button, message, InputNumber, Form, Spin, Space } from "antd";
-import ProductCard from "../components/productCard";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
-import Comment from "../comments/index";
 import BidPage from "../auction/normal/bidPage";
+import Commnets from "../comments/index";
 
-const config = {
-  headers: { Authorization: localStorage.getItem("Authorization") },
-};
+
+import { render } from "@testing-library/react";
+import { Carousel } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
+
 
 function ProductPage() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
   const { id } = useParams();
   const [userId, setuserId] = useState();
   const [product, setProduct] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [user, setUser] = useState(null);
   const history = useHistory();
+
+
+  
+  
 
   const getProduct = () => {
     axios
       .get(`${API_URL}/products/${id}`, config)
       .then((result) => {
         setProduct(result.data);
+        console.log(result.data);
       })
       .catch((error) => {
         console.error("에러!", error);
@@ -46,21 +58,29 @@ function ProductPage() {
       });
   };
 
-  useEffect(
-    function () {
-      let jwtTokenTemp = localStorage.getItem("Authorization");
 
-      if (jwtTokenTemp === null) {
-        message.error("로그인 후 이용가능합니다!");
-        history.push("/login");
-      } else {
-        let jwtToken = jwtTokenTemp.replace("Bearer ", "");
-        getProduct();
-        setuserId(jwt_decode(jwtToken).id);
-      }
-    },
-    [id, product]
-  );
+  useEffect(function () {
+    let jwtTokenTemp = localStorage.getItem("Authorization");
+
+    if (jwtTokenTemp === null) {
+      message.error("로그인 후 이용가능합니다!");
+      history.push("/login");
+    } else {
+      let jwtToken = jwtTokenTemp.replace("Bearer ", "");
+      getProduct();
+      setuserId(jwt_decode(jwtToken).id);
+    }
+
+    axios
+      .get(`${API_URL}/user-info`, config)
+      .then((result) => {
+        //실제 데이터로 변경
+        setUser(result.data);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
+  }, [id,product]);
 
   if (product === null) {
     return (
@@ -73,6 +93,32 @@ function ProductPage() {
       </div>
     );
   }
+
+  const comments = product.replys.map(reply => {
+    return({
+      author: reply.user.nickname,
+      avatar: reply.user.profileImageUrl === "/upload/public/avatar.png" ? `${API_URL}/upload/public/avatar.png` : reply.user.profileImageUrl ,
+      content: <p>{reply.content}{userId === reply.user.id ? <Button onClick={() => deleteComment(reply.id)}>삭제</Button> : ""}</p>,
+      datetime: dayjs(reply.createDate).fromNow(),
+    }
+    )
+  });
+
+
+  comments.reverse();
+
+  const deleteComment = (id2) => {
+    axios
+      .delete(`${API_URL}/product/${id}/reply/${id2}`, config)
+      .then((result) => {
+        message.info("삭제완료.");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+        message.error(`에러가 발생했습니다. ${error.message}`);
+      });
+  };
 
   const onClickPurchase = () => {
     axios
@@ -88,14 +134,27 @@ function ProductPage() {
 
   return (
     <div>
-      <div id="image-box">
-        <img src={`${API_URL}${product.imageUrl}`} />
-      </div>
+
+      <Carousel id="carousel" fade >
+        {product.photos.map(photo => {
+          return(
+          <Carousel.Item>
+          <img
+            height="500px"
+            className="d-block w-100"
+            src= {API_URL+photo.imageUrl}
+            alt="First slide"
+          />
+          </Carousel.Item>)
+        })}
+      </Carousel>
+
+      
 
       <div id="profile-box">
         <div>
           <img src="/images/icons/avatar.png" />
-          <span>{product.user.username}</span>
+          <span>{product.user.nickname}</span>
         </div>
         {product.user.id === userId ? (
           <div id="change-button">
@@ -127,7 +186,6 @@ function ProductPage() {
           ) : (
             <div id="price">{product.bid}원</div>
           )}
-
           <div id="createdAt">
             {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
           </div>
@@ -161,15 +219,16 @@ function ProductPage() {
           <pre id="description">{product.description}</pre>
         </div>
       </div>
-      <div>
+      
+      {/* <div>
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {products.map((product, index) => {
             //return <ProductCard key={index} product={product} />;
           })}
         </div>
-      </div>
-      <Comment />
+      </div> */}
+      <Commnets product={product} id ={id} user={user} comments={comments} deleteComment={deleteComment}  />
     </div>
   );
 }

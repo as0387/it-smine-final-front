@@ -6,6 +6,10 @@ import AuctionUpload from "./auctionupload";
 import ProductPage from "./product";
 import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
+import MyPage from "./mypage/index";
+import MypageUpdatePage from "./mypageUpdate";
+import Kakaomap from "./kakaomap/kakao"
+import Myproduct from "./myproduct/index"
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
@@ -23,11 +27,13 @@ import { login, logout } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateForm from "./updateForm";
 
+
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const isLogin = useSelector((store) => store.isLogin);
+
   const upload = function () {
     if (!isLogin) {
       message.error("로그인 후 이용해 주세요!");
@@ -36,6 +42,7 @@ function App() {
       history.push("/upload");
     }
   };
+
   const auctionupload = () => {
     if (!isLogin) {
       message.error("로그인 후 이용해 주세요!");
@@ -82,7 +89,14 @@ function App() {
   const logoutProc = () => {
     localStorage.removeItem("Authorization");
     dispatch(logout());
+    history.push("/")
   };
+
+  const mypageProc = () => {
+    history.push("/mypage")
+  };
+
+
 
   useEffect(() => {
     let jwtToken = localStorage.getItem("Authorization");
@@ -102,6 +116,13 @@ function App() {
             {isLogin ? (
               <>
                 <div>
+                  <Button
+                    size="large"
+                    onClick={mypageProc}
+                    className="k-button3"
+                  >
+                    내정보
+                  </Button>
                   <Button
                     size="large"
                     onClick={logoutProc}
@@ -189,6 +210,18 @@ function App() {
           </Route>
           <Route exact={true} path="/register">
             <RegisterPage />
+          </Route>
+          <Route exact={true} path="/mypage">
+            <MyPage />
+          </Route>
+          <Route exact={true} path="/kakaomap">
+            <Kakaomap />
+          </Route>
+          <Route exact={true} path="/mypageupdate">
+            <MypageUpdatePage/>
+          </Route>
+          <Route exact={true} path="/myproduct">
+            <Myproduct/>
           </Route>
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />

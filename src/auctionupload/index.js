@@ -4,85 +4,101 @@ import {
   Form,
   Input,
   InputNumber,
-  Upload,
   message,
+  Select,
 } from "antd";
-import FormItem from "antd/lib/form/FormItem";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import PicturesWall from "../picturesWall";
 
-const config = {
-  headers: { Authorization: localStorage.getItem("Authorization") },
-};
+const { Option } = Select;
+var fileIdList = [];
+var priceTest = 0;
+var bidLimitTest = 0;
+
+function handleChange(value) {
+  console.log(value);
+  bidLimitTest = parseInt(value);
+}
 
 function AuctionUpload() {
-  const [imageUrl, setImageUrl] = useState(null);
-  const [imageUrl2, setImageUrl2] = useState(null);
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: localStorage.getItem("Authorization"),
+    },
+  };
+  const [fileIds, setFileIds] = useState([]);
+
   const history = useHistory();
 
-  const onSubmit = (values) => {
-    axios
-      .post(
-        `${API_URL}/post`,
-        {
-          title: values.title,
-          description: values.description,
-          bidLimit: parseInt(values.bidLimit),
-          bid: parseInt(values.bid),
-          imageUrl: imageUrl,
-          type: 1,
-        },
-        config
-      )
-      .then((result) => {
-        console.log(result);
-        history.replace("/");
-      })
-      .catch((error) => {
-        console.error(error);
-        message.error(`에러가 발생했습니다. ${error.message}`);
-      });
-    axios
-      .post(`https://75bee61c1be4.ngrok.io/products`, {
-        title: values.title,
-        description: values.description,
-        price: parseInt(values.price),
-        imageUrl: imageUrl2,
-      })
-      .then((result) => {
-        console.log(result);
-        history.replace("/");
-      })
-      .catch((error) => {
-        console.error(error);
-        message.error(`에러가 발생했습니다. ${error.message}`);
-      });
-  };
-  const onChangeImage = (info) => {
-    console.log(info.file.status);
-    if (info.file.status === "uploading") {
-      return;
+  const limtCheck = useCallback((_, value) => {
+    let limitPrice = parseInt(value);
+    if (limitPrice <= priceTest + bidLimitTest) {
+      return Promise.reject(
+        new Error(
+          "상한가가 경매가보다 낮거나 (경매가 + 최소입찰 금액) 보다 낮습니다."
+        )
+      );
     }
-    if (info.file.status === "done") {
-      const imageUrl = info.file.response;
-      setImageUrl(imageUrl);
+    if (limitPrice % bidLimitTest != 0) {
+      return Promise.reject(
+        new Error("상한가를 최소 입찰 단위에 나누어 떨어지게 설정해 주세요.")
+      );
     }
+    return Promise.resolve();
+  }, []);
+
+  function priceChange(value) {
+    console.log(value);
+    for (var a in fileIds) console.log(a);
+    priceTest = value;
+  }
+  const getTextValue = (fileId) => {
+    fileIdList.push(fileId);
+    setFileIds(fileIdList);
   };
 
-  const onChangeImage2 = (info) => {
-    console.log(info.file.status);
-    if (info.file.status === "uploading") {
-      return;
-    }
-    if (info.file.status === "done") {
-      const response = info.file.response;
-      const imageUrl2 = response.imageUrl;
-      setImageUrl2(imageUrl2);
-    }
+  const onSubmit = (values) => {
+    const formData = new FormData();
+    const data1 = {
+      title: values.title,
+      description: values.description,
+      endTime: parseInt(values.endTime),
+      bid: parseInt(values.bid),
+      minBidUnit: parseInt(values.minBidUnit),
+      bidLimit: parseInt(values.bidLimit),
+      type: 1,
+    };
+    const data2 = {
+      fileIdList: fileIds,
+    };
+    console.log(JSON.stringify(data2));
+    formData.append(
+      "post1",
+      new Blob([JSON.stringify(data1)], { type: "application/json" })
+    );
+    formData.append(
+      "post2",
+      new Blob([JSON.stringify(data2)], { type: "application/json" })
+    );
+    console.log(formData.get);
+
+    axios
+      .post(`${API_URL}/nomalAuctionPost`, formData, config)
+      .then((result) => {
+        console.log(result);
+        history.replace("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        message.error(`에러가 발생했습니다. ${error.message}`);
+      });
   };
+
   return (
     <div id="upload-container">
       <Form name="상품 업로드" onFinish={onSubmit}>
@@ -90,43 +106,9 @@ function AuctionUpload() {
           name="upload"
           label={<div className="upload-label">상품 사진</div>}
         >
-          <Upload
-            name="image"
-            action={`${API_URL}/image`}
-            listType="picture"
-            showUploadList={false}
-            onChange={onChangeImage}
-          >
-            {imageUrl ? (
-              <img id="upload-img" src={`${API_URL}${imageUrl}`} />
-            ) : (
-              <div id="upload-img-placeholder">
-                <img src="/images/icons/camera.png"></img>
-                <span>이미지를 업로드해주세요.</span>
-              </div>
-            )}
-          </Upload>
-          <Upload
-            name="image"
-            action={`https://75bee61c1be4.ngrok.io/image`}
-            listType="picture"
-            showUploadList={false}
-            onChange={onChangeImage2}
-          >
-            {imageUrl2 ? (
-              <img
-                id="upload-img"
-                src={`https://75bee61c1be4.ngrok.io/${imageUrl2}`}
-              />
-            ) : (
-              <div id="upload-img-placeholder">
-                <img src="/images/icons/camera.png"></img>
-                <span>이미지를 업로드해주세요.</span>
-              </div>
-            )}
-          </Upload>
+          <PicturesWall getTextValue={getTextValue} />
         </Form.Item>
-
+        <Divider />
         <Form.Item
           name="title"
           label={<div className="upload-label">상품 이름</div>}
@@ -140,24 +122,57 @@ function AuctionUpload() {
         </Form.Item>
         <Divider />
         <Form.Item
-          name="endtime"
-          label={<div className="upload-label">경매마감시간 설정</div>}
-        ></Form.Item>
+          name="endTime"
+          label={<div className="upload-label">경매마감시간</div>}
+        >
+          <Select style={{ width: 120 }} onChange={handleChange}>
+            <Option value="1">1일후</Option>
+            <Option value="3">3일후</Option>
+            <Option value="7">7일후</Option>
+          </Select>
+        </Form.Item>
         <Form.Item
           name="bid"
           label={<div className="upload-label">경매시작가</div>}
-          rules={[{ required: true, message: "상품 가격을 입력해주세요" }]}
+          rules={[{ required: true, message: "경매 시작가를 입력해주세요" }]}
         >
           <InputNumber
             className="upload-price"
             size="large"
+            onChange={priceChange}
             defaultValue={0}
           ></InputNumber>
         </Form.Item>
         <Form.Item
+          name="minBidUnit"
+          label={
+            <div className="upload-label" id="upload-label2">
+              최소 입찰 단위
+            </div>
+          }
+        >
+          <Select
+            style={{ width: 120 }}
+            onChange={handleChange}
+            rules={[
+              { required: true, message: "최소 입찰 단위를 입력해주세요" },
+            ]}
+          >
+            <Option value="500">500원</Option>
+            <Option value="1000">1000원</Option>
+            <Option value="5000">5000원</Option>
+            <Option value="10000">10000원</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
           name="bidLimit"
           label={<div className="upload-label">상한가</div>}
-          rules={[{ required: true, message: "상품 가격을 입력해주세요" }]}
+          rules={[
+            { required: true, message: "상한가를 입력해주세요" },
+            {
+              validator: limtCheck,
+            },
+          ]}
         >
           <InputNumber
             className="upload-price"
@@ -175,8 +190,9 @@ function AuctionUpload() {
             size="large"
             id="product-description"
             showCount
-            maxLength={300}
-            placeholder="상품 소개를 적어주세요."
+            maxLength={500}
+            placeholder="상품 소개를 적어주세요. 내용은 최대 500자 입니다."
+            style={{ width: 500 }}
           ></Input.TextArea>
         </Form.Item>
         <Form.Item>

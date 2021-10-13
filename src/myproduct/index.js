@@ -5,18 +5,21 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
-import { Carousel } from "antd";
+import {useState} from "react";
+import { Button, message, InputNumber, Form, Spin, Space, Avatar, Progress } from "antd";
+
 
 dayjs.extend(relativeTime);
 
-function MainPage() {
+function Myproduct() {
   const [products, setProducts] = React.useState([]);
-  const banners = [
-    "/banner1.jpg",
-    "/banner2.png",
-    "/banner3.png",
-    "/banner4.png",
-  ];
+  const [user, setUser] = useState(null);
+  
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
+  
+  
   React.useEffect(function () {
     axios
       .get(`${API_URL}/products`)
@@ -28,22 +31,37 @@ function MainPage() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
+
+      axios
+      .get(`${API_URL}/user-info`, config)
+      .then((result) => {
+        console.log(result);
+        //실제 데이터로 변경
+        setUser(result.data);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
   }, []);
+
+   if (user === null) {
+    return (
+      <div id="spin-spin">
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <Carousel autoplay autoplaySpeed={3000}>
-        {banners.map((banner, index) => {
-          return (
-            <div id="banner">
-              <img src={"/banners" + banner} />
-            </div>
-          );
-        })}
-      </Carousel>
-      <h1 id="product-headline">판매상품</h1>
+      <h1 id="product-headline">판매내역</h1>
       <div id="product-list">
         {products.map(function (product, index) {
+          if(product.user.id === user.id){
           return (
             <div className="product-card">
               {product.soldout === 1 && <div className="product-blur" />}
@@ -51,7 +69,7 @@ function MainPage() {
                 <div>
                   <img
                     className="product-img"
-                    src={`${API_URL}${product.photos[0].imageUrl}`}
+                    src={`${API_URL}${product.imageUrl}`}
                   />
                 </div>
                 <div className="product-contents">
@@ -80,11 +98,11 @@ function MainPage() {
                 </div>
               </Link>
             </div>
-          );
+          );}
         })}
       </div>
     </div>
   );
 }
 
-export default MainPage;
+export default Myproduct;
