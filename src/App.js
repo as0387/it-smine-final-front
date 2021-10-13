@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import { login, logout } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateForm from "./updateForm";
+import ChatPage from "./chat";
 
 
 function App() {
@@ -225,6 +226,9 @@ function App() {
           </Route>
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
+          </Route>
+          <Route exact={true} path="/chatpage">
+            <ChatPage/>
           </Route>
         </Switch>
       </div>

@@ -6,34 +6,57 @@ import {
   InputNumber,
   Upload,
   message,
+  Select
 } from "antd";
 import { useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import PicturesWall from "../picturesWall";
+
+const { Option } = Select;
+var fileIdList = [];
+
+
 
 function UploadPage() {
   const config = {
     headers: { Authorization: localStorage.getItem("Authorization") },
   };
-  const [imageUrl, setImageUrl] = useState(null);
-  const [imageUrl2, setImageUrl2] = useState(null);
+
   const history = useHistory();
+  const [fileIds, setFileIds] = useState([]);
+
+  
+  const getTextValue = (fileId) => {
+    fileIdList.push(fileId);
+    setFileIds(fileIdList);
+  };
 
   const onSubmit = (values) => {
-    console.log(localStorage.getItem("Authorization"));
+    const formData = new FormData();
+    const data1 = {
+      title: values.title,
+      description: values.description,
+      price: values.price,
+      type: 1,
+    };
+    const data2 = {
+      fileIdList: fileIds,
+    };
+    console.log(JSON.stringify(data2));
+    formData.append(
+      "post1",
+      new Blob([JSON.stringify(data1)], { type: "application/json" })
+    );
+    formData.append(
+      "post2",
+      new Blob([JSON.stringify(data2)], { type: "application/json" })
+    );
+    console.log(formData.get);
     axios
-      .post(
-        `${API_URL}/post`,
-        {
-          title: values.title,
-          description: values.description,
-          price: parseInt(values.price),
-          imageUrl: imageUrl,
-        },
-        config
-      )
+      .post(`${API_URL}/nomalAuctionPost`, formData, config)
       .then((result) => {
         console.log(result);
         history.replace("/");
@@ -42,6 +65,7 @@ function UploadPage() {
         console.error(error);
         message.error(`에러가 발생했습니다. ${error.message}`);
       });
+  };
     //추천 서버이니까 나중에 추가하시오.
     // axios
     //   .post(`https://75bee61c1be4.ngrok.io/products`, {
@@ -58,29 +82,8 @@ function UploadPage() {
     //     console.error(error);
     //     message.error(`에러가 발생했습니다. ${error.message}`);
     //   });
-  };
-  const onChangeImage = (info) => {
-    console.log(info.file.status);
-    if (info.file.status === "uploading") {
-      return;
-    }
-    if (info.file.status === "done") {
-      const imageUrl = info.file.response;
-      setImageUrl(imageUrl);
-    }
-  };
-
-  const onChangeImage2 = (info) => {
-    console.log(info.file.status);
-    if (info.file.status === "uploading") {
-      return;
-    }
-    if (info.file.status === "done") {
-      const response = info.file.response;
-      const imageUrl2 = response.imageUrl;
-      setImageUrl2(imageUrl2);
-    }
-  };
+  
+ 
   return (
     <div id="upload-container">
       <Form name="상품 업로드" onFinish={onSubmit}>
@@ -88,43 +91,9 @@ function UploadPage() {
           name="upload"
           label={<div className="upload-label">상품 사진</div>}
         >
-          <Upload
-            name="image"
-            action={`${API_URL}/image`}
-            listType="picture"
-            showUploadList={false}
-            onChange={onChangeImage}
-          >
-            {imageUrl ? (
-              <img id="upload-img" src={`${API_URL}${imageUrl}`} />
-            ) : (
-              <div id="upload-img-placeholder">
-                <img src="/images/icons/camera.png"></img>
-                <span>이미지를 업로드해주세요.</span>
-              </div>
-            )}
-          </Upload>
-          <Upload
-            name="image"
-            action={`https://75bee61c1be4.ngrok.io/image`}
-            listType="picture"
-            showUploadList={false}
-            onChange={onChangeImage2}
-          >
-            {imageUrl2 ? (
-              <img
-                id="upload-img"
-                src={`https://75bee61c1be4.ngrok.io/${imageUrl2}`}
-              />
-            ) : (
-              <div id="upload-img-placeholder">
-                <img src="/images/icons/camera.png"></img>
-                <span>이미지를 업로드해주세요.</span>
-              </div>
-            )}
-          </Upload>
+          <PicturesWall getTextValue={getTextValue} />
         </Form.Item>
-
+        <Divider />
         <Form.Item
           name="title"
           label={<div className="upload-label">상품 이름</div>}
