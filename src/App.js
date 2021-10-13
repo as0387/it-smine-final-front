@@ -8,10 +8,22 @@ import LoginPage from "./login/index";
 import RegisterPage from "./register/index";
 import MyPage from "./mypage/index";
 import MypageUpdatePage from "./mypageUpdate";
-import Kakaomap from "./kakaomap/kakao"
-import Myproduct from "./myproduct/index"
+import Kakaomap from "./kakaomap/kakao";
+import Myproduct from "./myproduct/index";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
-import { Button, Affix, Menu, Dropdown, message } from "antd";
+import {
+  Spin,
+  Space,
+  Avatar,
+  Button,
+  Affix,
+  Menu,
+  Dropdown,
+  message,
+} from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { API_URL } from "./config/constants";
+import axios from "axios";
 import {
   CarOutlined,
   ThunderboltOutlined,
@@ -22,18 +34,21 @@ import {
   DownOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { login, logout } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateForm from "./updateForm";
 import ChatPage from "./chat";
 
-
 function App() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
   const history = useHistory();
   const dispatch = useDispatch();
 
   const isLogin = useSelector((store) => store.isLogin);
+  const [user, setUser] = useState(null);
 
   const upload = function () {
     if (!isLogin) {
@@ -51,6 +66,20 @@ function App() {
     } else {
       history.push("/auctionupload");
     }
+  };
+
+  const logoutProc = () => {
+    localStorage.removeItem("Authorization");
+    dispatch(logout());
+    history.push("/");
+  };
+
+  const mypageProc = () => {
+    history.push("/mypage");
+  };
+
+  const chatpageProc = () => {
+    history.push("/chatpage");
   };
 
   //
@@ -87,43 +116,68 @@ function App() {
     </Menu>
   );
 
-  const logoutProc = () => {
-    localStorage.removeItem("Authorization");
-    dispatch(logout());
-    history.push("/")
-  };
-
-  const mypageProc = () => {
-    history.push("/mypage")
-  };
-
-
+  const menu3 = (
+    <Menu>
+      <Menu.Item>
+        <a onClick={mypageProc}>내정보</a>
+      </Menu.Item>
+      <Menu.Item>
+        <a onClick={chatpageProc}>1:1 채팅</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   useEffect(() => {
     let jwtToken = localStorage.getItem("Authorization");
     if (jwtToken !== null) {
       dispatch(login());
     }
+
+    axios
+      .get(`${API_URL}/user-info`, config)
+      .then((result) => {
+        console.log(result);
+        //실제 데이터로 변경
+        setUser(result.data);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
   }, []);
 
+  if (user == null) {
+    return (
+      <div id="spin-spin">
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
   return (
     <div>
       <Affix offsetTop={0}>
         <div id="header">
           <div id="header-area">
             <Link to="/">
-              <img src="/images/icons/잇츠마인.png" width="" />
+              <img id="logo" src="/images/icons/잇츠마인.png" width="" />
             </Link>
             {isLogin ? (
               <>
                 <div>
-                  <Button
-                    size="large"
-                    onClick={mypageProc}
-                    className="k-button3"
-                  >
-                    내정보
-                  </Button>
+                  <Dropdown overlay={menu3} placement="bottomLeft" arrow>
+                    <Button size="large" className="k-button3">
+                      {user.profileImageUrl.startsWith("/") ? (
+                        <img id="profile" src="/images/icons/avatar.png" />
+                      ) : (
+                        <img id="profile2" src={`${user.profileImageUrl}`} />
+                      )}
+
+                      {user.nickname}
+                    </Button>
+                  </Dropdown>
                   <Button
                     size="large"
                     onClick={logoutProc}
@@ -219,16 +273,16 @@ function App() {
             <Kakaomap />
           </Route>
           <Route exact={true} path="/mypageupdate">
-            <MypageUpdatePage/>
+            <MypageUpdatePage />
           </Route>
           <Route exact={true} path="/myproduct">
-            <Myproduct/>
+            <Myproduct />
           </Route>
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
           </Route>
           <Route exact={true} path="/chatpage">
-            <ChatPage/>
+            <ChatPage />
           </Route>
         </Switch>
       </div>
