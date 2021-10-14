@@ -10,6 +10,7 @@ import { Spin, Space, Form, Button, Input } from "antd";
 import {} from "react-bootstrap";
 import { valueToNode } from "@babel/types";
 import { useCallback } from "react";
+console.log("");
 
 function ChatPage() {
   const config = {
