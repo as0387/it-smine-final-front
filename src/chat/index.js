@@ -130,7 +130,7 @@ function ChatPage() {
     return true;
   };
 
-  if (messages === null) {
+  if (messages === null || user === null) {
     return (
       <div id="spin-spin">
         <Space size="middle">
