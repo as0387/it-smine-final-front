@@ -4,18 +4,7 @@ import React from "react";
 import { useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
-import {
-  Button,
-  message,
-  InputNumber,
-  Form,
-  Spin,
-  Space,
-  Avatar,
-  Progress,
-  Upload,
-  Input,
-} from "antd";
+import { Button, message, Form, Spin, Space, Upload, Input } from "antd";
 
 function MyPageupdateForm() {
   const history = useHistory();

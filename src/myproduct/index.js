@@ -6,19 +6,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
 import { useState } from "react";
-import {
-  Button,
-  message,
-  InputNumber,
-  Form,
-  Spin,
-  Space,
-  Avatar,
-  Progress,
-} from "antd";
+import { Spin, Space, Empty } from "antd";
 
 dayjs.extend(relativeTime);
 
+var count = 0;
 function Myproduct() {
   const [products, setProducts] = React.useState([]);
   const [user, setUser] = useState(null);
@@ -49,6 +41,7 @@ function Myproduct() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
+    count = 0;
   }, []);
 
   if (user === null) {
@@ -61,6 +54,7 @@ function Myproduct() {
         </Space>
       </div>
     );
+  } else if (products === "") {
   }
 
   return (
@@ -68,7 +62,10 @@ function Myproduct() {
       <h1 id="product-headline">판매내역</h1>
       <div id="product-list">
         {products.map(function (product, index) {
+          console.log(count);
+
           if (product.user.id === user.id) {
+            count += 1;
             return (
               <div className="product-card">
                 {product.soldout === 1 && <div className="product-blur" />}
@@ -106,6 +103,8 @@ function Myproduct() {
                 </Link>
               </div>
             );
+          } else if (count == 0) {
+            return <Empty></Empty>;
           }
         })}
       </div>
