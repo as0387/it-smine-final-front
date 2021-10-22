@@ -161,7 +161,6 @@ function App() {
                 <div>
                   <Dropdown overlay={menu3} placement="bottomLeft" arrow>
                     <Button size="large" className="k-button3">
-                      <img id="profile" src="/images/icons/avatar.png" />
                       내정보
                     </Button>
                   </Dropdown>
