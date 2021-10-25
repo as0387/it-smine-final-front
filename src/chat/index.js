@@ -50,7 +50,7 @@ var space;
 function showMessageLeft(e) {
   space = document.getElementById("chat-content");
   let receivedBox = document.createElement("div");
-  receivedBox.innerHTML = `<li><span class"chat-box">${e.sender}:${e.message}</span></li>`;
+  receivedBox.innerHTML = `<li><span class="chat-box">${e.sender}:${e.message}</span></li>`;
   space.append(receivedBox);
 
   space.scrollTop = space.scrollHeight;
