@@ -12,6 +12,7 @@ import MypageUpdatePage from "./mypageUpdate";
 import Kakaomap from "./kakaomap/kakao";
 import Myproduct from "./myproduct/index";
 import LiveAuctionUpload from "./liveauctionupload";
+import LiveAuctionPage from "./auctionpage";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import {
   Spin,
@@ -272,6 +273,9 @@ function App() {
           </Route>
           <Route exact={true} path="/liveauctionupload">
             <LiveAuctionUpload />
+          </Route>
+          <Route exact={true} path="/liveauctionpage/:id?">
+            <LiveAuctionPage />
           </Route>
         </Switch>
       </div>
