@@ -1,0 +1,70 @@
+.chat-contentt {
+  height: 400px;
+  overflow-y: scroll;
+  padding: 10px;
+  border: 1px solid gainsboro;
+}
+.chat-contenttt {
+  height: 250px;
+  overflow-y: scroll;
+  padding: 10px;
+  border: 1px solid gainsboro;
+  margin-bottom: 10px;
+}
+.list-group-item {
+  margin-bottom: 1px;
+}
+
+.text-small {
+  font-size: 12px;
+  color: gray;
+  margin-bottom: 0;
+}
+.chat-box {
+  background: rgba(157, 157, 157, 0.2);
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  float: left;
+}
+
+.mine {
+  background: #99ffff;
+  float: right;
+}
+
+.upload-name {
+  width: 300px;
+}
+
+.gutter-row {
+  margin-top: 30px;
+}
+#first-row {
+  margin-right: 80px;
+}
+
+#second-row {
+  text-align: center;
+  margin-right: 45px;
+}
+
+#img {
+  margin-bottom: 10px;
+}
+#first--Button {
+  margin-top: 2px;
+}
+
+.second-button {
+  width: 342px;
+  margin-bottom: 13px;
+}
+
+#third-button {
+  margin-top: 54px;
+}
+
+#submit-2 {
+  width: 300px;
+}

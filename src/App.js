@@ -11,6 +11,8 @@ import MyPage from "./mypage/index";
 import MypageUpdatePage from "./mypageUpdate";
 import Kakaomap from "./kakaomap/kakao";
 import Myproduct from "./myproduct/index";
+import LiveAuctionUpload from "./liveauctionupload";
+import LiveAuctionPage from "./auctionpage";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import {
   Spin,
@@ -76,6 +78,15 @@ function App() {
     }
   };
 
+  const Liveauctionupload = () => {
+    if (!isLogin) {
+      message.error("로그인 후 이용해 주세요!");
+      history.push("/login");
+    } else {
+      history.push("/liveauctionupload");
+    }
+  };
+
   const logoutProc = () => {
     localStorage.removeItem("Authorization");
     dispatch(logout());
@@ -121,6 +132,9 @@ function App() {
       <Menu.Item onClick={auctionupload} key="2" icon={<PlusOutlined />}>
         경매상품
       </Menu.Item>
+      <Menu.Item onClick={Liveauctionupload} key="3" icon={<PlusOutlined />}>
+        LIVE경매
+      </Menu.Item>
     </Menu>
   );
 
@@ -148,7 +162,6 @@ function App() {
                 <div>
                   <Dropdown overlay={menu3} placement="bottomLeft" arrow>
                     <Button size="large" className="k-button3">
-                      <img id="profile" src="/images/icons/avatar.png" />
                       내정보
                     </Button>
                   </Dropdown>
@@ -257,6 +270,12 @@ function App() {
           </Route>
           <Route exact={true} path="/chatpage/:id?">
             <ChatPage />
+          </Route>
+          <Route exact={true} path="/liveauctionupload">
+            <LiveAuctionUpload />
+          </Route>
+          <Route exact={true} path="/liveauctionpage/:id?">
+            <LiveAuctionPage />
           </Route>
         </Switch>
       </div>

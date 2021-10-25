@@ -24,7 +24,7 @@ function handleChange(value) {
   bidLimitTest = parseInt(value);
 }
 
-function LiveAuctionUpload() {
+function AuctionUpload() {
   const config = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -164,22 +164,7 @@ function LiveAuctionUpload() {
             <Option value="10000">10000원</Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          name="bidLimit"
-          label={<div className="upload-label">상한가</div>}
-          rules={[
-            { required: true, message: "상한가를 입력해주세요" },
-            {
-              validator: limtCheck,
-            },
-          ]}
-        >
-          <InputNumber
-            className="upload-price"
-            size="large"
-            defaultValue={0}
-          ></InputNumber>
-        </Form.Item>
+
         <Divider />
         <Form.Item
           name="description"
@@ -205,4 +190,4 @@ function LiveAuctionUpload() {
   );
 }
 
-export default LiveAuctionUpload;
+export default AuctionUpload;
