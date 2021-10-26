@@ -9,19 +9,21 @@ import {
   Space,
   Spin,
 } from "antd";
+import jquery from "jquery";
+import $ from "jquery";
 import { useCallback, useState } from "react";
 import "./indexx.css";
 import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 import React from "react";
+let counttime = Date.now() + 10 * 1000;
 import Stomp from "stompjs";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 const { Countdown } = Statistic;
-var deadline; // Moment is also OK
-
+const deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24; // Moment is also OK
 function onFinish() {
   console.log("finished!");
 }
@@ -196,12 +198,14 @@ function LiveAuctionPage() {
               width={300}
               src={API_URL + product.livePhotos[0].imageUrl}
             />
-            <Countdown
-              id="count"
-              title="남은시간"
-              value={deadline}
-              format="mm:ss:SSS"
-            />
+            <Col span={12}>
+              <Countdown
+                id="count"
+                title="남은시간"
+                value={counttime}
+                onChange={onChange}
+              />
+            </Col>
             <h1>{product.title}</h1>
             <h3>{product.user.nickname}</h3>
             <h2>{product.description}</h2>
@@ -241,6 +245,7 @@ function LiveAuctionPage() {
               className="second-button"
               id="search"
             />
+
             <Button
               type="danger"
               id="third-button"
