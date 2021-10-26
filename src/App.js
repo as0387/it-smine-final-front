@@ -14,19 +14,7 @@ import Myproduct from "./myproduct/index";
 import LiveAuctionUpload from "./liveauctionupload";
 import LiveAuctionPage from "./auctionpage";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
-import {
-  Spin,
-  Space,
-  Avatar,
-  Button,
-  Affix,
-  Menu,
-  Dropdown,
-  message,
-} from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { API_URL } from "./config/constants";
-import axios from "axios";
+import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
   CarOutlined,
   ThunderboltOutlined,
@@ -37,7 +25,7 @@ import {
   DownOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { login, logout } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateForm from "./updateForm";

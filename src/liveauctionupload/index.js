@@ -78,20 +78,20 @@ function AuctionUpload() {
     };
     console.log(JSON.stringify(data2));
     formData.append(
-      "post1",
+      "live-auction-post",
       new Blob([JSON.stringify(data1)], { type: "application/json" })
     );
     formData.append(
-      "post2",
+      "photo",
       new Blob([JSON.stringify(data2)], { type: "application/json" })
     );
     console.log(formData.get);
 
     axios
-      .post(`${API_URL}/nomalAuctionPost`, formData, config)
+      .post(`${API_URL}/live-auction/new`, formData, config)
       .then((result) => {
         console.log(result);
-        history.replace("/");
+        history.replace(`/liveauctionpage/${result.data}`);
       })
       .catch((error) => {
         console.error(error);

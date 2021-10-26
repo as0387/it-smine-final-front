@@ -1,40 +1,191 @@
 import {
   Button,
-  Divider,
   Form,
   Input,
-  InputNumber,
-  message,
-  Select,
   Image,
   Row,
   Col,
   Statistic,
-  Descriptions,
-  Typography,
+  Space,
+  Spin,
 } from "antd";
 import { useCallback, useState } from "react";
 import "./indexx.css";
 import { API_URL } from "../config/constants";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
-import PicturesWall from "../picturesWall";
+import { useHistory, useParams } from "react-router-dom";
+import React from "react";
+import Stomp from "stompjs";
 
-const { Title } = Typography;
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 const { Countdown } = Statistic;
-const deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24; // Moment is also OK
+var deadline; // Moment is also OK
+
 function onFinish() {
   console.log("finished!");
 }
+
 function onChange(val) {
   if (4.95 * 1000 < val && val < 5 * 1000) {
     console.log("changed!");
   }
 }
 
+//////////////채팅 함수 및 변수모음//////////////
+
+var userName;
+var stompClient = null;
+var livePostId;
+
+const connect = (values) => {
+  disconnect();
+  var webSocket = new WebSocket("wss://itsmine.ngrok.io/live");
+  stompClient = Stomp.over(webSocket, { debug: false });
+  userName = values.userName;
+  livePostId = values.productId;
+  stompClient.connect({}, function () {
+    stompClient.subscribe("/topic/" + livePostId, function (e) {
+      showMessageLeft(JSON.parse(e.body));
+      console.log("새로운 메세지가 왔습니다.");
+    });
+    stompClient.subscribe("/topic/log/" + livePostId, function (e) {
+      showMessageLeft(JSON.parse(e.body));
+      console.log("새로운 로그가 왔습니다.");
+    });
+    stompClient.subscribe("/topic/in/" + livePostId, function (e) {
+      showMessageLeft(JSON.parse(e.body));
+      console.log(JSON.parse(e.body), "새로운 사람이 입장했습니다.");
+    });
+    stompClient.subscribe("/topic/out/" + livePostId, function (e) {
+      showMessageLeft(JSON.parse(e.body));
+      console.log(JSON.parse(e.body), "사람이 나갔습니다.");
+    });
+    stompClient.subscribe("/topic/bidInfo/" + livePostId, function (e) {
+      showMessageLeft(JSON.parse(e.body));
+      console.log("새로운 경매정보가 왔습니다.");
+    });
+  });
+};
+
+//경매 채팅 샌드 함수
+const onClickChatSend = (values) => {
+  var data = {
+    livePostId: livePostId,
+    sender: userName,
+    message: values.message,
+  };
+  stompClient.send("/app/live/send", {}, JSON.stringify(data));
+  showMessageRight(data);
+};
+
+//경매 입찰 샌드 함수
+const onClickBidSend = (values) => {
+  var data = {
+    price: values.price,
+  };
+  stompClient.send("/app/live/bidding/send", {}, JSON.stringify(data));
+};
+
+//전광판 정보 받는 함수
+const onClickBidInfoSend = (values) => {
+  var data = {
+    livePostId: livePostId,
+    bidder: null,
+    price: null,
+  };
+  stompClient.send("/app/live/bidInfo/send", {}, JSON.stringify(data));
+};
+
+function disconnect() {
+  if (stompClient !== null) {
+    stompClient.disconnect();
+  }
+}
+
+var space;
+
+function showMessageLeft(e) {
+  space = document.getElementById("chat-content");
+  let receivedBox = document.createElement("div");
+  receivedBox.innerHTML = `<li><span class="chat-box">${e.sender}:${e.message}</span></li>`;
+  space.append(receivedBox);
+
+  space.scrollTop = space.scrollHeight;
+}
+function showMessageRight(e) {
+  space = document.getElementById("chat-content");
+  let receivedBox = document.createElement("div");
+  receivedBox.innerHTML = `<li><span class="chat-box mine">${e.sender}: ${e.message}</span></li>`;
+  space.append(receivedBox);
+  space.scrollTop = space.scrollHeight;
+}
+
+window.onbeforeunload = function (e) {
+  disconnect();
+};
+
+////////////채팅 함수 모음////////////////
+
 function LiveAuctionPage() {
+  const config = {
+    headers: { Authorization: localStorage.getItem("Authorization") },
+  };
+
+  const [user, setUser] = useState();
+  const [product, setProduct] = useState(null);
+  const [chats, setChat] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const { id } = useParams();
+
+  React.useEffect(function () {
+    axios
+      .get(`${API_URL}/user-info`, config)
+      .then((result) => {
+        console.log(result);
+        //실제 데이터로 변경
+        userName = result.data.nickname;
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
+    axios
+      .get(`${API_URL}/live-auction/detail/${id}`, config)
+      .then((result) => {
+        console.log(result.data);
+        setProduct(result.data);
+        connect();
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
+  }, []);
+
+  if (product === null) {
+    return (
+      <div id="spin-spin">
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
+
+  const auctionStart = () => {
+    deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24;
+    // axios
+    //   .get(`${API_URL}/live-auction/start/${id}`, config)
+    //   .then((result) => {
+    //     console.log(result.data);
+    //     setProduct(result.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("에러발생!!", error);
+    //   });
+  };
+
   return (
     <div>
       <div className="product-container">
@@ -43,7 +194,7 @@ function LiveAuctionPage() {
             <Image
               id="img"
               width={300}
-              src="data:image/png;base64,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"
+              src={API_URL + product.livePhotos[0].imageUrl}
             />
             <Countdown
               id="count"
@@ -51,9 +202,9 @@ function LiveAuctionPage() {
               value={deadline}
               format="mm:ss:SSS"
             />
-            <h1>상품명</h1>
-            <div>판매자</div>
-            <h1>상품 설명</h1>
+            <h1>{product.title}</h1>
+            <h3>{product.user.nickname}</h3>
+            <h2>{product.description}</h2>
           </Col>
 
           <Col className="gutter-row" id="second-row" span={8}>
@@ -95,6 +246,7 @@ function LiveAuctionPage() {
               id="third-button"
               className="second-button"
               size="large"
+              onClick={auctionStart}
             >
               경매시작
             </Button>
@@ -102,17 +254,7 @@ function LiveAuctionPage() {
           <Col className="gutter-row" span={7}>
             <div className="chat-container">
               <div className="chat-room">
-                <ul className="list-group chat-contentt" id="chat-content">
-                  <li>
-                    <span className="chat-box mine">안녕하세요</span>
-                  </li>
-                  <li>
-                    <span className="chat-box">하이하이</span>
-                  </li>
-                  <li>
-                    <span className="chat-box">얼마에파시나요?</span>
-                  </li>
-                </ul>
+                <ul className="list-group chat-contentt" id="chat-content"></ul>
 
                 <Form>
                   <Form.Item name="message">

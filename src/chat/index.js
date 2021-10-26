@@ -16,8 +16,8 @@ var sender;
 
 const connect = (values) => {
   disconnect();
-  var socket = new SockJS("/talk");
-  stompClient = Stomp.over(socket);
+  var webSocket = new WebSocket("wss://itsmine.ngrok.io/talk");
+  stompClient = Stomp.over(webSocket, { debug: false });
   chatroomid = values.chatroomid;
   opponentUserName = values.opponentUserName;
   sender = values.sender;
