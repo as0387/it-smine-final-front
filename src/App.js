@@ -1,5 +1,6 @@
 import "antd/dist/antd.css";
 import "./App.css";
+import React from "react";
 import MainPageComponent from "./main/index.js";
 import UploadPage from "./upload";
 import AuctionUpload from "./auctionupload";
@@ -10,20 +11,10 @@ import MyPage from "./mypage/index";
 import MypageUpdatePage from "./mypageUpdate";
 import Kakaomap from "./kakaomap/kakao";
 import Myproduct from "./myproduct/index";
+import LiveAuctionUpload from "./liveauctionupload";
+import LiveAuctionPage from "./auctionpage";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
-import {
-  Spin,
-  Space,
-  Avatar,
-  Button,
-  Affix,
-  Menu,
-  Dropdown,
-  message,
-} from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { API_URL } from "./config/constants";
-import axios from "axios";
+import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
   CarOutlined,
   ThunderboltOutlined,
@@ -34,7 +25,7 @@ import {
   DownOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { login, logout } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateForm from "./updateForm";
@@ -49,6 +40,13 @@ function App() {
 
   const isLogin = useSelector((store) => store.isLogin);
   const [user, setUser] = useState(null);
+
+  React.useEffect(() => {
+    let jwtToken = localStorage.getItem("Authorization");
+    if (jwtToken !== null) {
+      dispatch(login());
+    }
+  }, []);
 
   const upload = function () {
     if (!isLogin) {
@@ -65,6 +63,15 @@ function App() {
       history.push("/login");
     } else {
       history.push("/auctionupload");
+    }
+  };
+
+  const Liveauctionupload = () => {
+    if (!isLogin) {
+      message.error("로그인 후 이용해 주세요!");
+      history.push("/login");
+    } else {
+      history.push("/liveauctionupload");
     }
   };
 
@@ -113,6 +120,9 @@ function App() {
       <Menu.Item onClick={auctionupload} key="2" icon={<PlusOutlined />}>
         경매상품
       </Menu.Item>
+      <Menu.Item onClick={Liveauctionupload} key="3" icon={<PlusOutlined />}>
+        LIVE경매
+      </Menu.Item>
     </Menu>
   );
 
@@ -127,34 +137,6 @@ function App() {
     </Menu>
   );
 
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/user-info`, config)
-      .then((result) => {
-        console.log(result);
-        //실제 데이터로 변경
-        setUser(result.data);
-      })
-      .catch((error) => {
-        console.error("에러발생!!", error);
-      });
-    let jwtToken = localStorage.getItem("Authorization");
-    if (jwtToken !== null) {
-      dispatch(login());
-    }
-  }, []);
-
-  if (user == null) {
-    return (
-      <div id="spin-spin">
-        <Space size="middle">
-          <Spin size="small" />
-          <Spin />
-          <Spin size="large" />
-        </Space>
-      </div>
-    );
-  }
   return (
     <div>
       <Affix offsetTop={0}>
@@ -168,13 +150,7 @@ function App() {
                 <div>
                   <Dropdown overlay={menu3} placement="bottomLeft" arrow>
                     <Button size="large" className="k-button3">
-                      {user.profileImageUrl.startsWith("/") ? (
-                        <img id="profile" src="/images/icons/avatar.png" />
-                      ) : (
-                        <img id="profile2" src={`${user.profileImageUrl}`} />
-                      )}
-
-                      {user.nickname}
+                      내정보
                     </Button>
                   </Dropdown>
                   <Button
@@ -280,8 +256,14 @@ function App() {
           <Route exact={true} path="/updateForm/:id">
             <UpdateForm />
           </Route>
-          <Route exact={true} path="/chatpage">
+          <Route exact={true} path="/chatpage/:id?">
             <ChatPage />
+          </Route>
+          <Route exact={true} path="/liveauctionupload">
+            <LiveAuctionUpload />
+          </Route>
+          <Route exact={true} path="/liveauctionpage/:id?">
+            <LiveAuctionPage />
           </Route>
         </Switch>
       </div>

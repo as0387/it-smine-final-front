@@ -96,6 +96,11 @@ body,
   padding: 0;
 }
 
+#spin-spin {
+  text-align: center;
+  margin-top: 30px;
+}
+
 @media screen and (max-width: 400px) {
   .product-card {
     width: 160px !important;
@@ -108,5 +113,8 @@ body,
   }
   .ant-carousel {
     margin: 0 -8px;
+  }
+  .k-button3 {
+    font-size: 14px;
   }
 }

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
-import { Carousel } from "antd";
+import { Carousel, Divider } from "antd";
 
 dayjs.extend(relativeTime);
 
@@ -41,8 +41,55 @@ function MainPage() {
           );
         })}
       </Carousel>
-      <h1 id="product-headline">판매상품</h1>
+
+      <Divider></Divider>
+
+      <div id="live-product-list">
+        <img id="liveicon" src="/images/icons/live1.png" />
+        {products.map(function (product, index) {
+          return (
+            <div className="product-card">
+              {product.soldout === 1 && <div className="product-blur" />}
+              <Link className="product-link" to={`/products/${product.id}`}>
+                <div>
+                  <img
+                    className="product-img"
+                    src={`${API_URL}${product.photos[0].imageUrl}`}
+                  />
+                </div>
+                <div className="product-contents">
+                  <span className="product-name">
+                    <span>{product.title}</span>
+                  </span>
+                  <span className="product-price">
+                    {product.type === 0 ? (
+                      <span>{product.price}원</span>
+                    ) : (
+                      <span>{product.bid}원</span>
+                    )}
+                  </span>
+                  <div className="product-footer">
+                    <div className="product-seller">
+                      <img
+                        className="product-avatar"
+                        src="images/icons/avatar.png"
+                      />
+                      <span>{product.user.nickname}</span>
+                    </div>
+                    <span className="product-date">
+                      {dayjs(product.createDate).fromNow()}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+      <Divider></Divider>
+
       <div id="product-list">
+        <h1 id="product-headline">판매상품</h1>
         {products.map(function (product, index) {
           return (
             <div className="product-card">

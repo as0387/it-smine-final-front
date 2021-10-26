@@ -5,21 +5,20 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
-import {useState} from "react";
-import { Button, message, InputNumber, Form, Spin, Space, Avatar, Progress } from "antd";
-
+import { useState } from "react";
+import { Spin, Space, Empty } from "antd";
 
 dayjs.extend(relativeTime);
 
+var count = 0;
 function Myproduct() {
   const [products, setProducts] = React.useState([]);
   const [user, setUser] = useState(null);
-  
+
   const config = {
     headers: { Authorization: localStorage.getItem("Authorization") },
   };
-  
-  
+
   React.useEffect(function () {
     axios
       .get(`${API_URL}/products`)
@@ -32,7 +31,7 @@ function Myproduct() {
         console.error("에러발생!!", error);
       });
 
-      axios
+    axios
       .get(`${API_URL}/user-info`, config)
       .then((result) => {
         console.log(result);
@@ -42,9 +41,10 @@ function Myproduct() {
       .catch((error) => {
         console.error("에러발생!!", error);
       });
+    count = 0;
   }, []);
 
-   if (user === null) {
+  if (user === null) {
     return (
       <div id="spin-spin">
         <Space size="middle">
@@ -54,6 +54,7 @@ function Myproduct() {
         </Space>
       </div>
     );
+  } else if (products === "") {
   }
 
   return (
@@ -61,44 +62,50 @@ function Myproduct() {
       <h1 id="product-headline">판매내역</h1>
       <div id="product-list">
         {products.map(function (product, index) {
-          if(product.user.id === user.id){
-          return (
-            <div className="product-card">
-              {product.soldout === 1 && <div className="product-blur" />}
-              <Link className="product-link" to={`/products/${product.id}`}>
-                <div>
-                  <img
-                    className="product-img"
-                    src={`${API_URL}${product.imageUrl}`}
-                  />
-                </div>
-                <div className="product-contents">
-                  <span className="product-name">
-                    <span>{product.title}</span>
-                  </span>
-                  <span className="product-price">
-                    {product.type === 0 ? (
-                      <span>{product.price}원</span>
-                    ) : (
-                      <span>{product.bid}원</span>
-                    )}
-                  </span>
-                  <div className="product-footer">
-                    <div className="product-seller">
-                      <img
-                        className="product-avatar"
-                        src="images/icons/avatar.png"
-                      />
-                      <span>{product.user.nickname}</span>
-                    </div>
-                    <span className="product-date">
-                      {dayjs(product.createDate).fromNow()}
-                    </span>
+          console.log(count);
+
+          if (product.user.id === user.id) {
+            count += 1;
+            return (
+              <div className="product-card">
+                {product.soldout === 1 && <div className="product-blur" />}
+                <Link className="product-link" to={`/products/${product.id}`}>
+                  <div>
+                    <img
+                      className="product-img"
+                      src={`${API_URL}${product.photos[0].imageUrl}`}
+                    />
                   </div>
-                </div>
-              </Link>
-            </div>
-          );}
+                  <div className="product-contents">
+                    <span className="product-name">
+                      <span>{product.title}</span>
+                    </span>
+                    <span className="product-price">
+                      {product.type === 0 ? (
+                        <span>{product.price}원</span>
+                      ) : (
+                        <span>{product.bid}원</span>
+                      )}
+                    </span>
+                    <div className="product-footer">
+                      <div className="product-seller">
+                        <img
+                          className="product-avatar"
+                          src="images/icons/avatar.png"
+                        />
+                        <span>{product.user.nickname}</span>
+                      </div>
+                      <span className="product-date">
+                        {dayjs(product.createDate).fromNow()}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            );
+          } else if (count == 0) {
+            return <Empty></Empty>;
+          }
         })}
       </div>
     </div>

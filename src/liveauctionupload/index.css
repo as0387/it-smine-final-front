@@ -30,13 +30,14 @@
 
 .upload-label {
   font-size: 18px;
-  width: 80px;
-  text-align: left;
+  width: 150px !important;
+}
+#upload-label2 {
+  font-size: 16px;
 }
 
 #product-description {
   height: 150px;
-  width: 500px;
 }
 
 #submit-button {
@@ -52,9 +53,4 @@
   height: 200px;
   margin-left: 16px;
   object-fit: contain;
-}
-
-#photo {
-  display: flex;
-  flex-direction: row;
 }

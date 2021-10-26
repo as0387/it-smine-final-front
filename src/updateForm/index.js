@@ -98,7 +98,7 @@ function UpdateForm() {
 
   if (product === null) {
     return (
-      <div>
+      <div id="spin-spin">
         <Space size="middle">
           <Spin size="small" />
           <Spin />

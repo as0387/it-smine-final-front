@@ -24,7 +24,7 @@ function handleChange(value) {
   bidLimitTest = parseInt(value);
 }
 
-function LiveAuctionUpload() {
+function AuctionUpload() {
   const config = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -78,20 +78,20 @@ function LiveAuctionUpload() {
     };
     console.log(JSON.stringify(data2));
     formData.append(
-      "post1",
+      "live-auction-post",
       new Blob([JSON.stringify(data1)], { type: "application/json" })
     );
     formData.append(
-      "post2",
+      "photo",
       new Blob([JSON.stringify(data2)], { type: "application/json" })
     );
     console.log(formData.get);
 
     axios
-      .post(`${API_URL}/nomalAuctionPost`, formData, config)
+      .post(`${API_URL}/live-auction/new`, formData, config)
       .then((result) => {
         console.log(result);
-        history.replace("/");
+        history.replace(`/liveauctionpage/${result.data}`);
       })
       .catch((error) => {
         console.error(error);
@@ -164,22 +164,7 @@ function LiveAuctionUpload() {
             <Option value="10000">10000원</Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          name="bidLimit"
-          label={<div className="upload-label">상한가</div>}
-          rules={[
-            { required: true, message: "상한가를 입력해주세요" },
-            {
-              validator: limtCheck,
-            },
-          ]}
-        >
-          <InputNumber
-            className="upload-price"
-            size="large"
-            defaultValue={0}
-          ></InputNumber>
-        </Form.Item>
+
         <Divider />
         <Form.Item
           name="description"
@@ -205,4 +190,4 @@ function LiveAuctionUpload() {
   );
 }
 
-export default LiveAuctionUpload;
+export default AuctionUpload;
