@@ -41,6 +41,7 @@
   margin-top: 30px;
 }
 #first-row {
+  width: 1000px;
   margin-right: 80px;
 }
 
@@ -67,4 +68,72 @@
 
 #submit-2 {
   width: 300px;
+}
+
+@media screen and (max-width: 400px) {
+  #img {
+    margin-bottom: 10px;
+  }
+  #first-row {
+    margin-right: 1000px;
+  }
+  #second-row {
+    margin-right: 1000px;
+    text-align: center;
+  }
+  #third-row {
+    margin-right: 1000px;
+  }
+
+  .second-button {
+    width: 200px;
+    margin-bottom: 13px;
+  }
+  #submit-2 {
+    width: 200px;
+  }
+
+  .chat-contentt {
+    width: 300px;
+    height: 400px;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 1px solid gainsboro;
+    margin-left: 43px;
+  }
+  #message {
+    margin-left: 43px;
+    width: 300px;
+  }
+  #submit-2 {
+    margin-left: 43px;
+    width: 300px;
+  }
+  #des-container {
+    width: 390px;
+  }
+  .chat-contenttt {
+    width: 300px;
+    height: 250px;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 1px solid gainsboro;
+    margin-left: 43px;
+    margin-bottom: 10px;
+  }
+  #first--Button {
+    margin-left: 43px;
+    width: 300px;
+    margin-top: 2px;
+  }
+  #search {
+    margin-left: 43px;
+    width: 242px;
+  }
+
+  #third-button {
+    margin-left: 43px;
+    width: 300px;
+    margin-top: 54px;
+  }
 }

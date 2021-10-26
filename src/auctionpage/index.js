@@ -1,3 +1,4 @@
+import Stomp from "stompjs";
 import {
   Button,
   Form,
@@ -17,8 +18,8 @@ import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 import React from "react";
+import { Divider } from "rc-menu";
 let counttime = Date.now() + 10 * 1000;
-import Stomp from "stompjs";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
@@ -196,7 +197,9 @@ function LiveAuctionPage() {
             <Image
               id="img"
               width={300}
-              src={API_URL + product.livePhotos[0].imageUrl}
+              src={
+                "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              }
             />
             <Col span={12}>
               <Countdown
@@ -206,15 +209,23 @@ function LiveAuctionPage() {
                 onChange={onChange}
               />
             </Col>
-            <h1>{product.title}</h1>
+            <div id="descriptions">
+              <h1>상품이름</h1>
+              <h3>닉네임</h3>
+              <h2>상품설명</h2>
+            </div>
+
+            {/* <h1>{product.title}</h1>
             <h3>{product.user.nickname}</h3>
-            <h2>{product.description}</h2>
+            <h2>{product.description}</h2> */}
           </Col>
 
           <Col className="gutter-row" id="second-row" span={8}>
-            <h3>현재 낙찰가</h3>
-            <h1>100,000,000원</h1>
-            <h1>임동혁 님</h1>
+            <div id="des-container">
+              <h3>현재 낙찰가</h3>
+              <h1>100,000,000원</h1>
+              <h1>임동혁 님</h1>
+            </div>
 
             <ul className="list-group chat-contenttt" id="chat-content">
               <li>
@@ -256,7 +267,7 @@ function LiveAuctionPage() {
               경매시작
             </Button>
           </Col>
-          <Col className="gutter-row" span={7}>
+          <Col className="gutter-row" id="third-row" span={7}>
             <div className="chat-container">
               <div className="chat-room">
                 <ul className="list-group chat-contentt" id="chat-content"></ul>

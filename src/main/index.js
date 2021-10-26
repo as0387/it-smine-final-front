@@ -11,6 +11,7 @@ dayjs.extend(relativeTime);
 
 function MainPage() {
   const [products, setProducts] = React.useState([]);
+  const [liveproducts, setLiveProducts] = React.useState([]);
   const banners = [
     "/banner1.jpg",
     "/banner2.png",
@@ -24,6 +25,16 @@ function MainPage() {
         console.log(result);
         const contents = result.data.content;
         setProducts(contents);
+      })
+      .catch((error) => {
+        console.error("에러발생!!", error);
+      });
+    axios
+      .get(`${API_URL}/live-auction/list`)
+      .then((result) => {
+        console.log(result);
+        const contents = result.data.content;
+        setLiveProducts(contents);
       })
       .catch((error) => {
         console.error("에러발생!!", error);
@@ -46,7 +57,7 @@ function MainPage() {
 
       <div id="live-product-list">
         <img id="liveicon" src="/images/icons/live1.png" />
-        {products.map(function (product, index) {
+        {liveproducts.map(function (product, index) {
           return (
             <div className="product-card">
               {product.soldout === 1 && <div className="product-blur" />}
@@ -54,7 +65,7 @@ function MainPage() {
                 <div>
                   <img
                     className="product-img"
-                    src={`${API_URL}${product.photos[0].imageUrl}`}
+                    src={`${API_URL}${product.livePhotos[0].imageUrl}`}
                   />
                 </div>
                 <div className="product-contents">
