@@ -70,7 +70,7 @@ function MainPage() {
               {product.endType === 0 ? (
                 <Link className="product-link" to={`/`}>
                   <div className="product-blur">
-                    <img id="sold-out" src="./images/icons/hammer.png" />
+                    <img id="sold-out" src="./images/icons/sold-out.png" />
                   </div>
                   <div>
                     <img
