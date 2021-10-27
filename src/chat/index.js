@@ -168,11 +168,15 @@ function ChatPage() {
                   .map((msg) => {
                     return msg.writer.id === user.id ? (
                       <li>
-                        <span className="chat-box mine">{msg.message}</span>
+                        <span className="chat-box mine">
+                          {msg.writer.nickname}: {msg.message}
+                        </span>
                       </li>
                     ) : (
                       <li>
-                        <span className="chat-box">{msg.message}</span>
+                        <span className="chat-box">
+                          {msg.writer.nickname}: {msg.message}
+                        </span>
                       </li>
                     );
                   })
