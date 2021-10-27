@@ -6,9 +6,18 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
 import { Carousel, Divider } from "antd";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 
 dayjs.extend(relativeTime);
-
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 6,
+  slidesToScroll: 1,
+};
 function MainPage() {
   const [products, setProducts] = React.useState([]);
   const [liveproducts, setLiveProducts] = React.useState([]);
@@ -61,7 +70,10 @@ function MainPage() {
           return (
             <div className="product-card">
               {product.soldout === 1 && <div className="product-blur" />}
-              <Link className="product-link" to={`/products/${product.id}`}>
+              <Link
+                className="product-link"
+                to={`/liveauctionpage/${product.id}`}
+              >
                 <div>
                   <img
                     className="product-img"
@@ -101,6 +113,7 @@ function MainPage() {
 
       <div id="product-list">
         <h1 id="product-headline">판매상품</h1>
+
         {products.map(function (product, index) {
           return (
             <div className="product-card">
@@ -140,6 +153,9 @@ function MainPage() {
             </div>
           );
         })}
+      </div>
+      <div>
+        <h2> Single Item</h2>
       </div>
     </div>
   );
