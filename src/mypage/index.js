@@ -91,14 +91,10 @@ function MyPage() {
                 <img src="/images/icons/camera.png"></img>
               </div>
             ) : (
-              <Image
-                id="upload-profile"
-                width={300}
-                src={`${API_URL}${user.profileImageUrl}`}
-              />
+              <img width={300} src={`${API_URL}${user.profileImageUrl}`}></img>
             )
           ) : user.profileImageUrl ? (
-            <Image width={300} src={`${user.profileImageUrl}`} />
+            <img width={300} src={`${user.profileImageUrl}`} />
           ) : (
             <div id="upload-profile-placeholder">
               <img src="/images/icons/camera.png"></img>
