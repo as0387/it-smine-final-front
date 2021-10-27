@@ -10,6 +10,7 @@ import {
   Space,
   Spin,
   Divider,
+  message,
 } from "antd";
 import jquery from "jquery";
 import $ from "jquery";
@@ -26,8 +27,6 @@ const { Countdown } = Statistic;
 var deadline = 0; // Moment is also OK
 var count = 0;
 var stompClient = null;
-var productBid;
-var productBidder = "잠시만 기다려주세요!";
 
 function onFinish() {
   console.log("finished!");
@@ -50,9 +49,20 @@ function LiveAuctionPage() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
   const [count1, setCount1] = useState(0);
+  const history = useHistory();
+  const [isBlocking, setIsBlocking] = useState(false);
 
   var userName;
-
+  const goBack = () => {
+    history.goBack();
+    let data = {
+      livePostId: id,
+      sender: userName,
+      message: "님이 퇴장하셨습니다.",
+    };
+    stompClient.send("/app/live/out", {}, JSON.stringify(data));
+    disconnect();
+  };
   React.useEffect(
     function () {
       axios
@@ -104,7 +114,14 @@ function LiveAuctionPage() {
           console.log("새로운 메세지가 왔습니다.");
         });
         stompClient.subscribe("/topic/log/" + id, function (e) {
-          showMessageLog(e.body);
+          if (e.body === "again") {
+            message.error("가장 최근에 입찰 하셨습니다.");
+          } else if (e.body === "low") {
+            message.error("입찰 금액이 현재 입찰가보다 낮습니다.");
+          } else {
+            message.success("입찰에 성공했습니다!!");
+            showMessageLog(e.body);
+          }
           console.log("새로운 로그가 왔습니다.");
         });
         stompClient.subscribe("/topic/in/" + id, function (e) {
@@ -112,7 +129,7 @@ function LiveAuctionPage() {
           console.log(JSON.parse(e.body), "새로운 사람이 입장했습니다.");
         });
         stompClient.subscribe("/topic/out/" + id, function (e) {
-          showMessageLeft(JSON.parse(e.body));
+          showMessageOut(JSON.parse(e.body));
           console.log(JSON.parse(e.body), "사람이 나갔습니다.");
         });
         let data = {
@@ -148,16 +165,6 @@ function LiveAuctionPage() {
     stompClient.send("/app/live/bidding/send", {}, JSON.stringify(data));
   };
 
-  //전광판 정보 받는 함수
-  const onClickBidInfoSend = (values) => {
-    var data = {
-      livePostId: id,
-      bidder: null,
-      price: null,
-    };
-    stompClient.send("/app/live/bidInfo/send", {}, JSON.stringify(data));
-  };
-
   function disconnect() {
     if (stompClient !== null) {
       stompClient.disconnect();
@@ -190,6 +197,13 @@ function LiveAuctionPage() {
     space.append(receivedBox);
     space.scrollTop = space.scrollHeight;
   }
+  function showMessageOut(e) {
+    space = document.getElementById("chat-content-message");
+    let receivedBox = document.createElement("div");
+    receivedBox.innerHTML = `<li><span>${e.sender} ${e.message}</span></li>`;
+    space.append(receivedBox);
+    space.scrollTop = space.scrollHeight;
+  }
 
   function showMessageLog(e) {
     space = document.getElementById("chat-content-log");
@@ -201,8 +215,15 @@ function LiveAuctionPage() {
 
   window.onbeforeunload = function (e) {
     //뒤로가거나 새로고침하면 소캣 연결 끊음
+    let data = {
+      livePostId: id,
+      sender: userName,
+      message: "님이 퇴장하셨습니다.",
+    };
+    stompClient.send("/app/live/out", {}, JSON.stringify(data));
     disconnect();
   };
+
   ////////////채팅 함수 모음////////////////
 
   const auctionStart = () => {
@@ -285,6 +306,7 @@ function LiveAuctionPage() {
                   className="second-button"
                   type="primary"
                   size="large"
+                  onClick=""
                 >
                   자동입찰
                 </Button>
@@ -322,6 +344,14 @@ function LiveAuctionPage() {
                     </Button>
                   </Form.Item>
                 </Form>
+                <Button
+                  id="submit-2"
+                  type="primary"
+                  size="large"
+                  onClick={goBack}
+                >
+                  뒤로가기
+                </Button>
               </div>
             </div>
           </Col>
