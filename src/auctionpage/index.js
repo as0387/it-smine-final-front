@@ -9,6 +9,7 @@ import {
   Statistic,
   Space,
   Spin,
+  Divider,
 } from "antd";
 import jquery from "jquery";
 import $ from "jquery";
@@ -18,9 +19,6 @@ import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 import React from "react";
-import Stomp from "stompjs";
-let counttime = Date.now() + 10 * 1000;
-
 let counttime = Date.now() + 10 * 1000;
 
 const { Search } = Input;
@@ -28,6 +26,8 @@ const { Countdown } = Statistic;
 const deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24; // Moment is also OK
 var count = 0;
 var stompClient = null;
+var productBid;
+var productBidder = "잠시만 기다려주세요!";
 
 function onFinish() {
   console.log("finished!");
@@ -49,30 +49,34 @@ function LiveAuctionPage() {
   const [user, setUser] = useState(null);
   const [product, setProduct] = useState(null);
   const { id } = useParams();
+  const [count1, setCount1] = useState(0);
 
   var userName;
 
-  React.useEffect(function () {
-    axios
-      .get(`${API_URL}/user-info`, config)
-      .then((result) => {
-        console.log(result);
-        //실제 데이터로 변경
-        setUser(result.data);
-      })
-      .catch((error) => {
-        console.error("에러발생!!", error);
-      });
-    axios
-      .get(`${API_URL}/live-auction/detail/${id}`, config)
-      .then((result) => {
-        console.log(result.data);
-        setProduct(result.data);
-      })
-      .catch((error) => {
-        console.error("에러발생!!", error);
-      });
-  }, []);
+  React.useEffect(
+    function () {
+      axios
+        .get(`${API_URL}/user-info`, config)
+        .then((result) => {
+          console.log(result);
+          //실제 데이터로 변경
+          setUser(result.data);
+        })
+        .catch((error) => {
+          console.error("에러발생!!", error);
+        });
+      axios
+        .get(`${API_URL}/live-auction/detail/${id}`, config)
+        .then((result) => {
+          console.log(result.data);
+          setProduct(result.data);
+        })
+        .catch((error) => {
+          console.error("에러발생!!", error);
+        });
+    },
+    [count1]
+  );
 
   if (product === null || user === null) {
     return (
@@ -89,8 +93,8 @@ function LiveAuctionPage() {
   const connect = () => {
     count++;
     userName = user.nickname;
-    var webSocket = new WebSocket("wss://itsmine.ngrok.io/live");
     if (stompClient == null && 2 > count > 0) {
+      var webSocket = new WebSocket("wss://itsmine.ngrok.io/live");
       stompClient = Stomp.over(webSocket);
       stompClient.connect({}, function () {
         stompClient.subscribe("/topic/" + id, function (e) {
@@ -110,10 +114,6 @@ function LiveAuctionPage() {
         stompClient.subscribe("/topic/out/" + id, function (e) {
           showMessageLeft(JSON.parse(e.body));
           console.log(JSON.parse(e.body), "사람이 나갔습니다.");
-        });
-        stompClient.subscribe("/topic/bidInfo/" + id, function (e) {
-          showMessageBidInfo(JSON.parse(e.body));
-          console.log("새로운 경매정보가 왔습니다.");
         });
         let data = {
           livePostId: id,
@@ -146,7 +146,6 @@ function LiveAuctionPage() {
       price: parseInt(values),
     };
     stompClient.send("/app/live/bidding/send", {}, JSON.stringify(data));
-    // onClickBidInfoSend();
   };
 
   //전광판 정보 받는 함수
@@ -192,15 +191,7 @@ function LiveAuctionPage() {
     space.scrollTop = space.scrollHeight;
   }
 
-  function showMessageBidInfo(e) {
-    space = document.getElementById("auctionBoard");
-    space.innerHTML = `<h1>${e.price}원</h1>`;
-    space.innerHTML = `<h1>현재 낙찰자 ${e.bidder}님</h1>`;
-    space.scrollTop = space.scrollHeight;
-  }
-
   function showMessageLog(e) {
-    console.log(e);
     space = document.getElementById("chat-content-log");
     let receivedBox = document.createElement("div");
     receivedBox.innerHTML = `<li><span>${e}</span></li>`;
@@ -227,6 +218,10 @@ function LiveAuctionPage() {
     //   });
   };
   connect();
+  setTimeout(() => {
+    setCount1(count1 + 1);
+  }, 3000);
+
   return (
     <div>
       <div className="product-container">
@@ -235,9 +230,7 @@ function LiveAuctionPage() {
             <Image
               id="img"
               width={300}
-              src={
-                "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-              }
+              src={API_URL + product.livePhotos[0].imageUrl}
             />
             <Col span={12}>
               <Countdown
@@ -248,55 +241,60 @@ function LiveAuctionPage() {
               />
             </Col>
             <div id="descriptions">
-              <h1>상품이름</h1>
-              <h3>닉네임</h3>
-              <h2>상품설명</h2>
+              <h1>{product.title}</h1>
+              <h3>{product.user.nickname}</h3>
+              <Divider className="dividers" />
+              <h2>{product.description}</h2>
+              <Divider className="dividers" />
             </div>
-
-            {/* <h1>{product.title}</h1>
-            <h3>{product.user.nickname}</h3>
-            <h2>{product.description}</h2> */}
           </Col>
 
           <Col className="gutter-row" id="second-row" span={8}>
             <h3>현재 낙찰가</h3>
             <div id="auctionBoard">
-              <h1>{product.bid}원</h1>
-              <h1>잠시만 기다려주세요!</h1>
+              <div>
+                <h1>{product.bid}원</h1>
+                <h1>유력 낙찰자: {product.bidder.nickname}님</h1>
+              </div>
             </div>
-
+            🕒전광판은 3초마다 업데이트됩니다.....🕒
+            <Divider className="dividers" />
             <ul
               className="list-group chat-contenttt"
               id="chat-content-log"
             ></ul>
+            {user.id == product.user.id ? (
+              <Button
+                type="danger"
+                id="third-button"
+                className="second-button"
+                size="large"
+                onClick={auctionStart}
+              >
+                경매시작
+              </Button>
+            ) : (
+              <div>
+                <Button
+                  id="first--Button"
+                  className="second-button"
+                  type="primary"
+                  size="large"
+                >
+                  자동입찰
+                </Button>
 
-            <Button
-              id="first--Button"
-              className="second-button"
-              type="primary"
-              size="large"
-            >
-              자동입찰
-            </Button>
-
-            <Search
-              placeholder="input search text"
-              onSearch={onClickBidSend}
-              enterButton="입찰"
-              size="large"
-              className="second-button"
-              id="search"
-            />
-
-            <Button
-              type="danger"
-              id="third-button"
-              className="second-button"
-              size="large"
-              onClick={auctionStart}
-            >
-              경매시작
-            </Button>
+                <Search
+                  placeholder="input search text"
+                  onSearch={onClickBidSend}
+                  enterButton="입찰"
+                  size="large"
+                  className="second-button"
+                  id="search"
+                />
+                <Divider className="dividers" />
+              </div>
+            )}
           </Col>
           <Col className="gutter-row" id="third-row" span={7}>
             <div className="chat-container">
