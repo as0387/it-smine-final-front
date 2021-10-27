@@ -74,12 +74,20 @@
   #img {
     margin-bottom: 10px;
   }
+  #descriptions {
+    width: 380px;
+  }
   #first-row {
     margin-right: 1000px;
   }
   #second-row {
     margin-right: 1000px;
-    text-align: center;
+  }
+  #second-row h3 {
+    width: 380px;
+  }
+  #auctionBoard {
+    width: 380px;
   }
   #third-row {
     margin-right: 1000px;
@@ -135,5 +143,8 @@
     margin-left: 43px;
     width: 300px;
     margin-top: 54px;
+  }
+  .dividers {
+    width: 380px;
   }
 }

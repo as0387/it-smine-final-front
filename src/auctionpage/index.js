@@ -9,6 +9,7 @@ import {
   Statistic,
   Space,
   Spin,
+  Divider,
 } from "antd";
 import jquery from "jquery";
 import $ from "jquery";
@@ -18,9 +19,6 @@ import { API_URL } from "../config/constants";
 import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 import React from "react";
-import Stomp from "stompjs";
-let counttime = Date.now() + 10 * 1000;
-
 let counttime = Date.now() + 10 * 1000;
 
 const { Search } = Input;
@@ -235,9 +233,7 @@ function LiveAuctionPage() {
             <Image
               id="img"
               width={300}
-              src={
-                "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-              }
+              src={API_URL + product.livePhotos[0].imageUrl}
             />
             <Col span={12}>
               <Countdown
@@ -248,14 +244,12 @@ function LiveAuctionPage() {
               />
             </Col>
             <div id="descriptions">
-              <h1>상품이름</h1>
-              <h3>닉네임</h3>
-              <h2>상품설명</h2>
+              <h1>{product.title}</h1>
+              <h3>{product.user.nickname}</h3>
+              <Divider className="dividers" />
+              <h2>{product.description}</h2>
+              <Divider className="dividers" />
             </div>
-
-            {/* <h1>{product.title}</h1>
-            <h3>{product.user.nickname}</h3>
-            <h2>{product.description}</h2> */}
           </Col>
 
           <Col className="gutter-row" id="second-row" span={8}>
@@ -264,7 +258,7 @@ function LiveAuctionPage() {
               <h1>{product.bid}원</h1>
               <h1>잠시만 기다려주세요!</h1>
             </div>
-
+            <Divider className="dividers" />
             <ul
               className="list-group chat-contenttt"
               id="chat-content-log"
@@ -287,6 +281,7 @@ function LiveAuctionPage() {
               className="second-button"
               id="search"
             />
+            <Divider className="dividers" />
 
             <Button
               type="danger"
