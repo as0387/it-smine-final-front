@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
-import { Carousel, Divider } from "antd";
+import { Carousel, Divider, Space, Spin } from "antd";
 import Button from "@restart/ui/esm/Button";
 
 dayjs.extend(relativeTime);
@@ -48,6 +48,18 @@ function MainPage() {
       });
   }, []);
 
+  if (products === null || liveproducts == null) {
+    return (
+      <div id="spin-spin">
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Carousel autoplay autoplaySpeed={3000}>
@@ -67,7 +79,7 @@ function MainPage() {
         {liveproducts.map(function (product, index) {
           return (
             <div className="product-card">
-              {product.endType === 0 ? (
+              {product.endType === 1 ? (
                 <Link className="product-link" to={`/`}>
                   <div className="product-blur">
                     <img id="sold-out" src="./images/icons/sold-out.png" />
