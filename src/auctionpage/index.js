@@ -264,34 +264,38 @@ function LiveAuctionPage() {
               id="chat-content-log"
             ></ul>
 
-            <Button
-              id="first--Button"
-              className="second-button"
-              type="primary"
-              size="large"
-            >
-              자동입찰
-            </Button>
+            {user.id == product.user.id ? (
+              <Button
+                type="danger"
+                id="third-button"
+                className="second-button"
+                size="large"
+                onClick={auctionStart}
+              >
+                경매시작
+              </Button>
+            ) : (
+              <div>
+                <Button
+                  id="first--Button"
+                  className="second-button"
+                  type="primary"
+                  size="large"
+                >
+                  자동입찰
+                </Button>
 
-            <Search
-              placeholder="input search text"
-              onSearch={onClickBidSend}
-              enterButton="입찰"
-              size="large"
-              className="second-button"
-              id="search"
-            />
-            <Divider className="dividers" />
-
-            <Button
-              type="danger"
-              id="third-button"
-              className="second-button"
-              size="large"
-              onClick={auctionStart}
-            >
-              경매시작
-            </Button>
+                <Search
+                  placeholder="input search text"
+                  onSearch={onClickBidSend}
+                  enterButton="입찰"
+                  size="large"
+                  className="second-button"
+                  id="search"
+                />
+                <Divider className="dividers" />
+              </div>
+            )}
           </Col>
           <Col className="gutter-row" id="third-row" span={7}>
             <div className="chat-container">

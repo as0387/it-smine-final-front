@@ -4,7 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 import "./index.css";
 import { API_URL } from "../config/constants";
 import dayjs from "dayjs";
-import { Button, message, InputNumber, Form, Spin, Space } from "antd";
+import {
+  Button,
+  message,
+  InputNumber,
+  Form,
+  Spin,
+  Space,
+  Row,
+  Col,
+  Divider,
+} from "antd";
 import jwt_decode from "jwt-decode";
 import { Link } from "react-router-dom";
 import BidPage from "../auction/normal/bidPage";
@@ -142,90 +152,96 @@ function ProductPage() {
 
   return (
     <div>
-      <Carousel id="carousel" fade>
-        {product.photos.map((photo) => {
-          return (
-            <Carousel.Item>
-              <img
-                height="500px"
-                className="d-block w-100"
-                src={API_URL + photo.imageUrl}
-                alt="First slide"
-              />
-            </Carousel.Item>
-          );
-        })}
-      </Carousel>
-
-      <div id="profile-box">
-        <div>
-          <img src="/images/icons/avatar.png" />
-          <span>{product.user.nickname}</span>
-        </div>
-        {product.user.id === userId ? (
-          <div id="change-button">
-            <Link to={"/updateForm/" + product.id}>
-              <Button id="change-button1" size="middle" type="primary">
-                수정
-              </Button>
-            </Link>
-
-            <Button
-              size="middle"
-              type="primary"
-              danger
-              onClick={() => deletePost(product.id)}
-            >
-              삭제
-            </Button>
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
-
-      <div id="contents-box">
-        <div>
-          <div id="name">{product.title}</div>
-          {product.type !== 1 ? (
-            <div id="price">{product.price}원</div>
-          ) : (
-            <div id="price">{product.bid}원</div>
-          )}
-          <div id="createdAt">
-            {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
-          </div>
-          {product.type === 1 ? (
+      <Row>
+        <Col className="gutter-row" span={15} id="firstrow">
+          <Carousel id="carousel" fade>
+            {product.photos.map((photo) => {
+              return (
+                <Carousel.Item>
+                  <img
+                    id="product-img"
+                    className="d-block w-100"
+                    src={API_URL + photo.imageUrl}
+                    alt="First slide"
+                  />
+                </Carousel.Item>
+              );
+            })}
+          </Carousel>
+        </Col>
+        <Col className="gutter-row" span={6} id="secondrow">
+          <div id="profile-box">
             <div>
-              <div>
-                <div id="auction-commit">
-                  <BidPage product={product} userId={userId} />
-                </div>
-              </div>
+              <img src="/images/icons/avatar.png" />
+              <span>{product.user.nickname}</span>
             </div>
-          ) : (
-            <div>
-              <div>
+            {product.user.id === userId ? (
+              <div id="change-button">
+                <Link to={"/updateForm/" + product.id}>
+                  <Button id="change-button1" size="middle" type="primary">
+                    수정
+                  </Button>
+                </Link>
+
                 <Button
-                  id="purchase-button"
-                  size="large"
+                  size="middle"
                   type="primary"
                   danger
-                  onClick={onClickPurchase}
-                  disabled={product.soldout === 1 ? true : false}
+                  onClick={() => deletePost(product.id)}
                 >
-                  재빨리 구매하기
+                  삭제
                 </Button>
               </div>
-            </div>
-          )}
-          <br />
-          <br />
-          <div id="price">상품 설명</div>
-          <pre id="description">{product.description}</pre>
-        </div>
-      </div>
+            ) : (
+              ""
+            )}
+          </div>
 
+          <div id="contents-box">
+            <div>
+              <div id="name">{product.title}</div>
+              {product.type !== 1 ? (
+                <div id="price">{product.price}원</div>
+              ) : (
+                <div id="price">{product.bid}원</div>
+              )}
+              <div id="createdAt">
+                {dayjs(product.createdAt).format("YYYY년 MM월 DD일")}
+              </div>
+              {product.type === 1 ? (
+                <div>
+                  <div>
+                    <div id="auction-commit">
+                      <BidPage product={product} userId={userId} />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div>
+                    <Button
+                      id="purchase-button"
+                      size="large"
+                      type="primary"
+                      danger
+                      onClick={onClickPurchase}
+                      disabled={product.soldout === 1 ? true : false}
+                    >
+                      재빨리 구매하기
+                    </Button>
+                  </div>
+                </div>
+              )}
+              <br />
+              <br />
+              <div id="price">상품 설명</div>
+              <pre id="description">{product.description}</pre>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Divider />
       {/* <div>
         <h1>추천 상품</h1>
         <div style={{ display: "flex", flexWrap: "wrap" }}>

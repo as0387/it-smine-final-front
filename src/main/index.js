@@ -15,7 +15,7 @@ const settings = {
   dots: true,
   infinite: true,
   speed: 500,
-  slidesToShow: 6,
+  slidesToShow: 2,
   slidesToScroll: 1,
 };
 function MainPage() {
@@ -153,9 +153,6 @@ function MainPage() {
             </div>
           );
         })}
-      </div>
-      <div>
-        <h2> Single Item</h2>
       </div>
     </div>
   );

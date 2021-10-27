@@ -87,3 +87,23 @@
   margin-left: auto;
   margin-right: auto;
 }
+@media screen and (max-width: 400px) {
+  #product-img {
+    height: 380px;
+  }
+  #carousel {
+    width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #firstrow {
+    margin-left: 2px;
+    margin-right: 100px;
+  }
+  #profile-box {
+    width: 380px;
+  }
+  #contents-box {
+    width: 380px;
+  }
+}
