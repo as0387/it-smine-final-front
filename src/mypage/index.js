@@ -18,6 +18,7 @@ import {
   Card,
   Divider,
   Row,
+  Col,
 } from "antd";
 import {
   UserOutlined,
@@ -27,6 +28,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import Column from "rc-table/lib/sugar/Column";
 
 const { Meta } = Card;
 
@@ -67,78 +69,59 @@ function MyPage() {
   }
   return (
     <>
-      <Row></Row>
-      <div id="profile-container">
-        <Card
-          id="profile-card"
-          style={{
-            width: 400,
-            alignItems: "center",
-          }}
-          actions={[
-            <EditOutlined
-              onClick={function () {
-                history.push("/mypageupdate");
-              }}
-              key="edit"
-            />,
-            <EllipsisOutlined key="ellipsis" />,
-          ]}
-        >
-          {user.profileImageUrl.startsWith("/") ? (
-            user.profileImageUrl == "/" ? (
-              <div id="upload-profile-placeholder">
-                <img src="/images/icons/camera.png"></img>
-              </div>
-            ) : (
-              <img width={300} src={`${API_URL}${user.profileImageUrl}`}></img>
-            )
-          ) : user.profileImageUrl ? (
-            <img width={300} src={`${user.profileImageUrl}`} />
-          ) : (
-            <div id="upload-profile-placeholder">
-              <img src="/images/icons/camera.png"></img>
+      <Row>
+        <Col className="gutter-row" id="first-row" span={24}>
+          <div id="profile-container">
+            <div id="profile-img">
+              {user.profileImageUrl.startsWith("/") ? (
+                user.profileImageUrl == "/" ? (
+                  <div id="upload-profile-placeholder">
+                    <img src="/images/icons/camera.png"></img>
+                  </div>
+                ) : (
+                  <img
+                    width={300}
+                    src={`${API_URL}${user.profileImageUrl}`}
+                  ></img>
+                )
+              ) : user.profileImageUrl ? (
+                <img width={300} src={`${user.profileImageUrl}`} />
+              ) : (
+                <div id="upload-profile-placeholder">
+                  <img src="/images/icons/camera.png"></img>
+                </div>
+              )}
             </div>
-          )}
-          <Meta title={user.nickname} description={user.email} />
-          <div id="">
-            <p>
-              <Progress
-                strokeColor={{
-                  "0%": "#108ee9",
-                  "100%": "#10eee9",
-                }}
-                percent={percent}
-                format={(percent) => `${percent}℃`}
-              />
-            </p>
+            <div id="profile-description">
+              <Divider />
+              <h3>{user.nickname}</h3>
+              <h3>{user.email}</h3>
+              <Divider />
+            </div>
+            <div id="profile-icon-container">
+              <div className="profile-icon">
+                <Link className="product-link" to="/kakaomap">
+                  <img src="./images/icons/placeholder.png" />
+                  <h5>내동네 설정하기</h5>
+                </Link>
+              </div>
+              <div className="profile-icon">
+                <Link className="product-link" to="/myproduct">
+                  <img src="./images/icons/shopping.png" />
+                  <h5>거래 내역</h5>
+                </Link>
+              </div>
+              <div className="profile-icon">
+                <Link className="product-link" to="/mypageupdate">
+                  <img src="./images/icons/cogwheel.png" />
+                  <h5>프로필 편집</h5>
+                </Link>
+              </div>
+            </div>
+            <Divider />
           </div>
-        </Card>
-        <div id="profile-description">
-          <div>
-            <Button
-              id="my-location"
-              size="large"
-              onClick={function () {
-                history.push("/kakaomap");
-              }}
-            >
-              내 동네 설정하기
-            </Button>
-          </div>
-
-          <div>
-            <Button
-              id="my-location"
-              onClick={function () {
-                history.push("/myproduct");
-              }}
-            >
-              일반상품 거래내역
-            </Button>
-          </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </>
   );
 }

@@ -1,7 +1,6 @@
 /*global kakao*/
 import React, { useEffect } from "react";
 import "./kakao.css";
-
 const Kakaomap = () => {
   useEffect(() => {
     var mapContainer = document.getElementById("map"), // 지도를 표시할 div
@@ -65,6 +64,7 @@ const Kakaomap = () => {
         <h1>내정보 설정</h1>
       </div>
       <div id="map"></div>
+      <div>당신의 현재 위치는</div>
     </div>
   );
 };
