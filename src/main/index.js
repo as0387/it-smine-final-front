@@ -66,7 +66,7 @@ function MainPage() {
         {liveproducts.map(function (product, index) {
           return (
             <div className="product-card">
-              {product.soldout === 1 && <div className="product-blur" />}
+              {product.startType === 1 && <div className="product-blur" />}
               <Link
                 className="product-link"
                 to={`/liveauctionpage/${product.id}`}

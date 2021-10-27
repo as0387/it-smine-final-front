@@ -82,6 +82,8 @@ const App = (props) => {
         message.error(`이미 입찰 하셨습니다.....`);
     } else if (product.user.id === userId) {
       message.error(`본인의 상품은 입찰하실 수 없습니다......`);
+    } else if (product.bidLimit < parseInt(values.bid)) {
+      message.error(`상한가 보다 높게 입찰하실 수 없습니다......`);
     } else {
       axios
         .put(
