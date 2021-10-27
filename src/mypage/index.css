@@ -3,6 +3,20 @@
   border: 1px solid gainsboro;
   float: left;
 }
+#profile-container {
+  text-align: center;
+}
+.profile-icon {
+  margin-left: 180px;
+}
+.profile-icon img {
+  width: 50px;
+  height: 50px;
+}
+#profile-icon-container {
+  display: flex;
+  float: left;
+}
 
 @media screen and (max-width: 400px) {
   #profile-container {

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
 import { Carousel, Divider } from "antd";
+import Button from "@restart/ui/esm/Button";
 
 dayjs.extend(relativeTime);
 const settings = {
@@ -66,42 +67,79 @@ function MainPage() {
         {liveproducts.map(function (product, index) {
           return (
             <div className="product-card">
-              {product.startType === 1 && <div className="product-blur" />}
-              <Link
-                className="product-link"
-                to={`/liveauctionpage/${product.id}`}
-              >
-                <div>
-                  <img
-                    className="product-img"
-                    src={`${API_URL}${product.livePhotos[0].imageUrl}`}
-                  />
-                </div>
-                <div className="product-contents">
-                  <span className="product-name">
-                    <span>{product.title}</span>
-                  </span>
-                  <span className="product-price">
-                    {product.type === 0 ? (
-                      <span>{product.price}원</span>
-                    ) : (
-                      <span>{product.bid}원</span>
-                    )}
-                  </span>
-                  <div className="product-footer">
-                    <div className="product-seller">
-                      <img
-                        className="product-avatar"
-                        src="images/icons/avatar.png"
-                      />
-                      <span>{product.user.nickname}</span>
-                    </div>
-                    <span className="product-date">
-                      {dayjs(product.createDate).fromNow()}
-                    </span>
+              {product.startType === 1 ? (
+                <Link className="product-link" to={`/`}>
+                  <div className="product-blur">
+                    <img id="sold-out" src="./images/icons/hammer.png" />
                   </div>
-                </div>
-              </Link>
+                  <div>
+                    <img
+                      className="product-img"
+                      src={`${API_URL}${product.livePhotos[0].imageUrl}`}
+                    />
+                  </div>
+                  <div className="product-contents">
+                    <span className="product-name">
+                      <span>{product.title}</span>
+                    </span>
+                    <span className="product-price">
+                      {product.type === 0 ? (
+                        <span>{product.price}원</span>
+                      ) : (
+                        <span>{product.bid}원</span>
+                      )}
+                    </span>
+                    <div className="product-footer">
+                      <div className="product-seller">
+                        <img
+                          className="product-avatar"
+                          src="images/icons/avatar.png"
+                        />
+                        <span>{product.user.nickname}</span>
+                      </div>
+                      <span className="product-date">
+                        {dayjs(product.createDate).fromNow()}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <Link
+                  className="product-link"
+                  to={`/liveauctionpage/${product.id}`}
+                >
+                  <div>
+                    <img
+                      className="product-img"
+                      src={`${API_URL}${product.livePhotos[0].imageUrl}`}
+                    />
+                  </div>
+                  <div className="product-contents">
+                    <span className="product-name">
+                      <span>{product.title}</span>
+                    </span>
+                    <span className="product-price">
+                      {product.type === 0 ? (
+                        <span>{product.price}원</span>
+                      ) : (
+                        <span>{product.bid}원</span>
+                      )}
+                    </span>
+                    <div className="product-footer">
+                      <div className="product-seller">
+                        <img
+                          className="product-avatar"
+                          src="images/icons/avatar.png"
+                        />
+                        <span>{product.user.nickname}</span>
+                      </div>
+                      <span className="product-date">
+                        {dayjs(product.createDate).fromNow()}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              )}
             </div>
           );
         })}
