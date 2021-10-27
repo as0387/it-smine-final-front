@@ -1,3 +1,4 @@
+import Stomp from "stompjs";
 import {
   Button,
   Form,
@@ -18,6 +19,7 @@ import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 import React from "react";
 import Stomp from "stompjs";
+let counttime = Date.now() + 10 * 1000;
 
 let counttime = Date.now() + 10 * 1000;
 
@@ -233,7 +235,9 @@ function LiveAuctionPage() {
             <Image
               id="img"
               width={300}
-              src={API_URL + product.livePhotos[0].imageUrl}
+              src={
+                "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              }
             />
             <Col span={12}>
               <Countdown
@@ -243,9 +247,15 @@ function LiveAuctionPage() {
                 onChange={onChange}
               />
             </Col>
-            <h1>{product.title}</h1>
+            <div id="descriptions">
+              <h1>상품이름</h1>
+              <h3>닉네임</h3>
+              <h2>상품설명</h2>
+            </div>
+
+            {/* <h1>{product.title}</h1>
             <h3>{product.user.nickname}</h3>
-            <h2>{product.description}</h2>
+            <h2>{product.description}</h2> */}
           </Col>
 
           <Col className="gutter-row" id="second-row" span={8}>
@@ -288,7 +298,7 @@ function LiveAuctionPage() {
               경매시작
             </Button>
           </Col>
-          <Col className="gutter-row" span={7}>
+          <Col className="gutter-row" id="third-row" span={7}>
             <div className="chat-container">
               <div className="chat-room">
                 <ul
