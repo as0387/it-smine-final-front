@@ -13,6 +13,7 @@ import Kakaomap from "./kakaomap/kakao";
 import Myproduct from "./myproduct/index";
 import LiveAuctionUpload from "./liveauctionupload";
 import LiveAuctionPage from "./auctionpage";
+import EndPage from "./endpage";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { Button, Affix, Menu, Dropdown, message } from "antd";
 import {
@@ -264,6 +265,9 @@ function App() {
           </Route>
           <Route exact={true} path="/liveauctionpage/:id?">
             <LiveAuctionPage />
+          </Route>
+          <Route exact={true} path="/endpage/:id?">
+            <EndPage />
           </Route>
         </Switch>
       </div>

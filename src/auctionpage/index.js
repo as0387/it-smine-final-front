@@ -40,6 +40,7 @@ function LiveAuctionPage() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
   const [count1, setCount1] = useState(0);
+  const history = useHistory();
 
   var userName;
   const goBack = () => {
@@ -244,6 +245,7 @@ function LiveAuctionPage() {
       .then((result) => {
         //end되면 실행될 부분
         console.log(result.data);
+        history.push(`/endpage/${id}`);
       })
       .catch((error) => {
         console.error(error);
@@ -288,7 +290,7 @@ function LiveAuctionPage() {
             </Col>
             <div id="descriptions">
               <h5>상품명: {product.title}</h5>
-              <h5>시작가격: {product.bid}</h5>
+              <h5>현재가격: {product.bid}</h5>
               <h5>닉네임: {product.user.nickname}</h5>
               <span>{product.minBidUnit}원 단위로 입찰해주세요!</span>
               <Divider className="dividers" />
