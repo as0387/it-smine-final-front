@@ -67,10 +67,8 @@ function AuctionUpload() {
     const data1 = {
       title: values.title,
       description: values.description,
-      endTime: parseInt(values.endTime),
       bid: parseInt(values.bid),
       minBidUnit: parseInt(values.minBidUnit),
-      bidLimit: parseInt(values.bidLimit),
       type: 1,
     };
     const data2 = {
@@ -121,16 +119,6 @@ function AuctionUpload() {
           ></Input>
         </Form.Item>
         <Divider />
-        <Form.Item
-          name="endTime"
-          label={<div className="upload-label">경매마감시간</div>}
-        >
-          <Select style={{ width: 120 }} onChange={handleChange}>
-            <Option value="1">1일후</Option>
-            <Option value="3">3일후</Option>
-            <Option value="7">7일후</Option>
-          </Select>
-        </Form.Item>
         <Form.Item
           name="bid"
           label={<div className="upload-label">경매시작가</div>}
