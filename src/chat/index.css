@@ -1,8 +1,24 @@
 .chat-content {
-  height: 600px;
+  width: 400px;
+  height: 500px;
   overflow-y: scroll;
   padding: 10px;
   border: 1px solid gainsboro;
+  margin-left: 43px;
+}
+#submit {
+  width: 400px;
+  margin-left: 42px;
+}
+#message-input {
+  width: 400px;
+  margin-left: 42px;
+}
+#my-button {
+  width: 234px;
+  border: 1px;
+  background-color: #5db6e7;
+  color: white;
 }
 .list-group-item {
   margin-bottom: 1px;
@@ -23,10 +39,39 @@
 }
 
 .mine {
-  background: #99ffff;
+  background-color: #5db6e7;
+  color: white;
   float: right;
 }
 
 .upload-name {
   width: 300px;
+}
+@media screen and (max-width: 400px) {
+  .chat-content {
+    width: 320px;
+    height: 320px;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 1px solid gainsboro;
+    margin-left: 18px;
+  }
+  #message-input {
+    width: 320px;
+    margin-left: 18px;
+  }
+  #chat-list {
+    margin-right: 1000px;
+  }
+  #submit {
+    width: 320px;
+    margin-left: 18px;
+  }
+  #my-button {
+    width: 320px;
+    margin-left: 18px;
+    border: 0ch;
+    background-color: #5db6e7;
+    color: white;
+  }
 }

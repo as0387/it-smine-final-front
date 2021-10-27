@@ -138,6 +138,7 @@ function LiveAuctionPage() {
       sender: userName,
       message: values.message,
     };
+    fnReset();
     if (stompClient != null) {
       stompClient.send("/app/live/send", {}, JSON.stringify(data));
       showMessageRight(data);
@@ -248,6 +249,9 @@ function LiveAuctionPage() {
   }, 3000);
   connect();
 
+  function fnReset() {
+    $("#input2").val("");
+  }
   return (
     <div>
       <div className="product-container">
@@ -268,8 +272,9 @@ function LiveAuctionPage() {
             </Col>
             <div id="descriptions">
               <h5>상품명: {product.title}</h5>
-
+              <h5>시작가격: {product.bid}</h5>
               <h5>닉네임: {product.user.nickname}</h5>
+              <span>{product.minBidUnit}원 단위로 입찰해주세요!</span>
               <Divider className="dividers" />
               <h5>{product.description}</h5>
               <Divider className="dividers" />
@@ -288,7 +293,10 @@ function LiveAuctionPage() {
                 <h1>유력 낙찰자: {product.bidder.nickname}님</h1>
               </div>
             )}
-            🕒전광판은 3초마다 업데이트됩니다.....🕒
+            <div id="mupdate">
+              <span>🕒전광판은 3초마다 업데이트됩니다.....🕒</span>
+            </div>
+
             <Divider className="dividers" />
             <ul
               className="list-group chat-contenttt"
@@ -327,7 +335,9 @@ function LiveAuctionPage() {
                 <Divider className="dividers" />
               </div>
             ) : (
-              <h1>경매 준비 중</h1>
+              <div id="auctionBoard">
+                <h1>경매 준비 중</h1>
+              </div>
             )}
           </Col>
           <Col className="gutter-row" id="third-row" span={7}>
@@ -341,6 +351,7 @@ function LiveAuctionPage() {
                 <Form onFinish={onClickChatSend}>
                   <Form.Item name="message">
                     <Input
+                      id="input2"
                       size="large"
                       placeholder="메세지를 입력해주세요."
                     ></Input>

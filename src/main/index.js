@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
-import { Carousel, Divider } from "antd";
+import { Carousel, Divider, Space, Spin } from "antd";
 import Button from "@restart/ui/esm/Button";
 
 dayjs.extend(relativeTime);
@@ -47,6 +47,18 @@ function MainPage() {
         console.error("에러발생!!", error);
       });
   }, []);
+
+  if (products === null || liveproducts === null) {
+    return (
+      <div id="spin-spin">
+        <Space size="middle">
+          <Spin size="small" />
+          <Spin />
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -147,4 +147,11 @@
   .dividers {
     width: 380px;
   }
+  #mupdate {
+    width: 380px;
+  }
+  #input2 {
+    margin-left: 43px;
+    width: 300px;
+  }
 }

@@ -146,17 +146,18 @@ function ChatPage() {
     <>
       <div className="container p-4 detail">
         <div className="row">
-          <div className="col-3 p-0">
+          <div id="chat-list" className="col-3 p-0">
             {chats.map((chat) => {
               console.log(chat);
               return (
                 <button
+                  data-msg3={`${user.nickname === null ? "" : user.nickname}`}
                   data-msg1={`${chat.chatRoomId}`}
                   data-msg2={`${chat.opponentUserName}`}
-                  data-msg3={`${user.nickname}`}
                   onClick={chatRoom}
+                  id="my-button"
                 >
-                  {chat.opponentUserName} 님과의채팅
+                  {chat.opponentUserName}
                 </button>
               );
             })}
@@ -186,6 +187,7 @@ function ChatPage() {
                 <Form onFinish={onClickPurchase}>
                   <Form.Item name="message">
                     <Input
+                      id="message-input"
                       size="large"
                       placeholder="메세지를 입력해주세요."
                     ></Input>
