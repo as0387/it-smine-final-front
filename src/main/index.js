@@ -50,8 +50,8 @@ function MainPage() {
 
   if (products === null || liveproducts === null) {
     return (
-        <Space size="middle">
       <div id="spin-spin">
+        <Space size="middle">
           <Spin size="small" />
           <Spin />
           <Spin size="large" />

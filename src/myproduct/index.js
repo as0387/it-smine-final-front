@@ -59,7 +59,7 @@ function Myproduct() {
 
   return (
     <div>
-      <h1 id="product-headline">판매내역</h1>
+      <h1 id="product-headline">낙찰내역</h1>
       <div id="product-list">
         {products.map(function (product, index) {
           console.log(count);
