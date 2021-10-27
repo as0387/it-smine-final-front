@@ -24,7 +24,7 @@ function Myproduct() {
       .get(`${API_URL}/live-auction/my-list`, config)
       .then((result) => {
         console.log(result);
-        const contents = result.data.content;
+        const contents = result.data;
         setProducts(contents);
       })
       .catch((error) => {
@@ -44,7 +44,7 @@ function Myproduct() {
     count = 0;
   }, []);
 
-  if (user === null || products === undefined) {
+  if (products === undefined) {
     return (
       <div id="spin-spin">
         <Space size="middle">
@@ -54,49 +54,46 @@ function Myproduct() {
         </Space>
       </div>
     );
-  } else if (products === "") {
   }
 
   return (
     <div>
-      <h1 id="product-headline">판매내역</h1>
+      <h1 id="product-headline">낙찰내역</h1>
       <div id="product-list">
         {products.map(function (product, index) {
           return (
             <div className="product-card">
-              {product.soldout === 1 && <div className="product-blur" />}
-              <Link className="product-link" to={`/products/${product.id}`}>
-                <div>
-                  <img
-                    className="product-img"
-                    src={`${API_URL}${product.photos[0].imageUrl}`}
-                  />
-                </div>
-                <div className="product-contents">
-                  <span className="product-name">
-                    <span>{product.title}</span>
-                  </span>
-                  <span className="product-price">
-                    {product.type === 0 ? (
-                      <span>{product.price}원</span>
-                    ) : (
-                      <span>{product.bid}원</span>
-                    )}
-                  </span>
-                  <div className="product-footer">
-                    <div className="product-seller">
-                      <img
-                        className="product-avatar"
-                        src="images/icons/avatar.png"
-                      />
-                      <span>{product.user.nickname}</span>
-                    </div>
-                    <span className="product-date">
-                      {dayjs(product.createDate).fromNow()}
-                    </span>
+              {/* {product.soldout === 1 && <div className="product-blur" />} */}
+              <div>
+                <img
+                  className="product-img"
+                  src={`${API_URL}${product.livePhotos[0].imageUrl}`}
+                />
+              </div>
+              <div className="product-contents">
+                <span className="product-name">
+                  <span>{product.title}</span>
+                </span>
+                <span className="product-price">
+                  {product.type === 0 ? (
+                    <span>{product.price}원</span>
+                  ) : (
+                    <span>{product.bid}원</span>
+                  )}
+                </span>
+                <div className="product-footer">
+                  <div className="product-seller">
+                    <img
+                      className="product-avatar"
+                      src="images/icons/avatar.png"
+                    />
+                    <span>{product.user.nickname}</span>
                   </div>
+                  <span className="product-date">
+                    {dayjs(product.createDate).fromNow()}
+                  </span>
                 </div>
-              </Link>
+              </div>
             </div>
           );
         })}

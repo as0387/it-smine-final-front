@@ -71,10 +71,7 @@ function LiveAuctionPage() {
           console.log(result.data);
           setProduct(result.data);
           if (product.startType !== 0) {
-            deadline =
-              new Date(product.auctionStartDate).getTime() +
-              1 * 60 * 60 * 24 * 2 +
-              1000 * 24;
+            deadline = new Date(product.auctionStartDate).getTime() + 10 * 1000;
           }
         })
         .catch((error) => {
@@ -245,7 +242,8 @@ function LiveAuctionPage() {
       .then((result) => {
         //end되면 실행될 부분
         console.log(result.data);
-        history.push(`/endpage/${id}`);
+        clearTimeout(stime);
+        window.location.href = `/endpage/${id}`;
       })
       .catch((error) => {
         console.error(error);
@@ -262,7 +260,7 @@ function LiveAuctionPage() {
     stompClient.send("/app/live/bidding/send", {}, JSON.stringify(data));
   };
 
-  setTimeout(() => {
+  var stime = setTimeout(() => {
     setCount1(count1 + 1);
   }, 3000);
   connect();

@@ -47,7 +47,7 @@ function EndPage() {
     axios
       .post(
         `${API_URL}/chat/newChat`,
-        { userId1: user.id, userId2: product.bidder.id },
+        { userId1: user.id, userId2: product.user.id },
         config
       )
       .then((result) => {

@@ -164,7 +164,7 @@ function MainPage() {
         {products.map(function (product, index) {
           return (
             <div className="product-card">
-              {product.soldout === 1 && <div className="product-blur" />}
+              {/* {product.soldout === 1 && <div className="product-blur" />} */}
               <Link className="product-link" to={`/products/${product.id}`}>
                 <div>
                   <img
