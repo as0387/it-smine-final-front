@@ -23,7 +23,7 @@ let counttime = Date.now() + 10 * 1000;
 
 const { Search } = Input;
 const { Countdown } = Statistic;
-const deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24; // Moment is also OK
+var deadline = 0; // Moment is also OK
 var count = 0;
 var stompClient = null;
 var productBid;
@@ -236,27 +236,32 @@ function LiveAuctionPage() {
               <Countdown
                 id="count"
                 title="남은시간"
-                value={counttime}
+                value={deadline}
                 onChange={onChange}
               />
             </Col>
             <div id="descriptions">
-              <h1>{product.title}</h1>
-              <h3>{product.user.nickname}</h3>
+              <h5>상품명: {product.title}</h5>
+
+              <h5>닉네임: {product.user.nickname}</h5>
               <Divider className="dividers" />
-              <h2>{product.description}</h2>
+              <h5>{product.description}</h5>
               <Divider className="dividers" />
             </div>
           </Col>
 
           <Col className="gutter-row" id="second-row" span={8}>
             <h3>현재 낙찰가</h3>
-            <div id="auctionBoard">
-              <div>
+            {product.bidder === null ? (
+              <div id="auctionBoard">
+                <h1>잠시만 기다려주세요..!</h1>
+              </div>
+            ) : (
+              <div id="auctionBoard">
                 <h1>{product.bid}원</h1>
                 <h1>유력 낙찰자: {product.bidder.nickname}님</h1>
               </div>
-            </div>
+            )}
             🕒전광판은 3초마다 업데이트됩니다.....🕒
             <Divider className="dividers" />
             <ul

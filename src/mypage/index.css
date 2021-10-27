@@ -4,19 +4,19 @@
   float: left;
 }
 
-#profile-card {
-  margin-top: 20px;
-  text-align: center;
-  border: 1px solid gainsboro;
-  float: left;
-}
-
-#profile-description {
-  margin-left: 10px;
-  margin-top: 20px;
-  float: left;
-}
-
-#profile-container {
-  margin-left: 30px;
+@media screen and (max-width: 400px) {
+  #profile-container {
+    text-align: center;
+  }
+  .profile-icon {
+    margin-left: 24px;
+  }
+  .profile-icon img {
+    width: 50px;
+    height: 50px;
+  }
+  #profile-icon-container {
+    display: flex;
+    float: left;
+  }
 }

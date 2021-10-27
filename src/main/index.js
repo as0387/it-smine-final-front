@@ -6,9 +6,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API_URL } from "../config/constants.js";
 import { Carousel, Divider } from "antd";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 
 dayjs.extend(relativeTime);
 const settings = {
