@@ -226,14 +226,17 @@ function LiveAuctionPage() {
       });
   };
   if (product.startType !== 0 && count === 1) {
-    deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24;
+    deadline =
+      new Date(product.auctionStartDate).getTime() +
+      1.6 * 60 * 60 * 24 * 2 +
+      1000 * 24;
   }
 
   function onFinish() {
     axios
       .get(`${API_URL}/live-auction/end/${id}`, config)
       .then((result) => {
-        <Modal></Modal>;
+        //end되면 실행될 부분
       })
       .catch((error) => {
         message.error(error);
