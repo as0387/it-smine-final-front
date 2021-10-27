@@ -17,6 +17,7 @@ import {
   Image,
   Card,
   Divider,
+  Row,
 } from "antd";
 import {
   UserOutlined,
@@ -66,6 +67,7 @@ function MyPage() {
   }
   return (
     <>
+      <Row></Row>
       <div id="profile-container">
         <Card
           id="profile-card"
