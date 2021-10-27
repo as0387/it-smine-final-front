@@ -222,7 +222,7 @@ function LiveAuctionPage() {
         message.success("경매 시작!");
       })
       .catch((error) => {
-        message.error(error);
+        console.error(error);
       });
   };
   if (product.startType !== 0 && count === 1) {
