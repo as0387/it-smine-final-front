@@ -11,6 +11,7 @@ import {
   Spin,
   Divider,
   message,
+  Modal,
 } from "antd";
 import jquery from "jquery";
 import $ from "jquery";
@@ -28,16 +29,6 @@ var deadline = 0; // Moment is also OK
 var count = 0;
 var stompClient = null;
 
-function onFinish() {
-  console.log("finished!");
-}
-
-function onChange(val) {
-  if (4.95 * 1000 < val && val < 5 * 1000) {
-    console.log("changed!");
-  }
-}
-
 //////////////채팅 함수 및 변수모음//////////////
 
 function LiveAuctionPage() {
@@ -49,12 +40,10 @@ function LiveAuctionPage() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
   const [count1, setCount1] = useState(0);
-  const history = useHistory();
-  const [isBlocking, setIsBlocking] = useState(false);
 
   var userName;
   const goBack = () => {
-    history.goBack();
+    window.location.href = "/";
     let data = {
       livePostId: id,
       sender: userName,
@@ -227,21 +216,34 @@ function LiveAuctionPage() {
   ////////////채팅 함수 모음////////////////
 
   const auctionStart = () => {
-    deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24;
-    // axios
-    //   .get(`${API_URL}/live-auction/start/${id}`, config)
-    //   .then((result) => {
-    //     console.log(result.data);
-    //     setProduct(result.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("에러발생!!", error);
-    //   });
+    axios
+      .get(`${API_URL}/live-auction/start/${id}`, config)
+      .then((result) => {
+        message.success("경매 시작!");
+      })
+      .catch((error) => {
+        message.error(error);
+      });
   };
-  connect();
+  if (product.startType !== 0 && count === 1) {
+    deadline = Date.now() + 1.6 * 60 * 60 * 24 * 2 + 1000 * 24;
+  }
+
+  function onFinish() {
+    axios
+      .get(`${API_URL}/live-auction/end/${id}`, config)
+      .then((result) => {
+        <Modal></Modal>;
+      })
+      .catch((error) => {
+        message.error(error);
+      });
+  }
+
   setTimeout(() => {
     setCount1(count1 + 1);
   }, 3000);
+  connect();
 
   return (
     <div>
@@ -258,7 +260,7 @@ function LiveAuctionPage() {
                 id="count"
                 title="남은시간"
                 value={deadline}
-                onChange={onChange}
+                onFinish={onFinish}
               />
             </Col>
             <div id="descriptions">
@@ -299,7 +301,7 @@ function LiveAuctionPage() {
               >
                 경매시작
               </Button>
-            ) : (
+            ) : product.startType === 1 ? (
               <div>
                 <Button
                   id="first--Button"
@@ -321,6 +323,8 @@ function LiveAuctionPage() {
                 />
                 <Divider className="dividers" />
               </div>
+            ) : (
+              <h1>경매 준비 중</h1>
             )}
           </Col>
           <Col className="gutter-row" id="third-row" span={7}>
