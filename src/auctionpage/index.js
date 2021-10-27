@@ -69,6 +69,12 @@ function LiveAuctionPage() {
         .then((result) => {
           console.log(result.data);
           setProduct(result.data);
+          if (product.startType !== 0) {
+            deadline =
+              new Date(product.auctionStartDate).getTime() +
+              1 * 60 * 60 * 24 * 2 +
+              1000 * 24;
+          }
         })
         .catch((error) => {
           console.error("에러발생!!", error);
@@ -103,13 +109,18 @@ function LiveAuctionPage() {
           console.log("새로운 메세지가 왔습니다.");
         });
         stompClient.subscribe("/topic/log/" + id, function (e) {
-          if (e.body === "again") {
+          console.log(e.body);
+          let result = JSON.parse(e.body);
+          if (result.message === "again" && user.nickname === result.sender) {
             message.error("가장 최근에 입찰 하셨습니다.");
-          } else if (e.body === "low") {
+          } else if (
+            result.message === "low" &&
+            user.nickname === result.sender
+          ) {
             message.error("입찰 금액이 현재 입찰가보다 낮습니다.");
           } else {
-            message.success("입찰에 성공했습니다!!");
-            showMessageLog(e.body);
+            message.success("입찰 했습니다!!");
+            showMessageLog(result);
           }
           console.log("새로운 로그가 왔습니다.");
         });
@@ -147,7 +158,7 @@ function LiveAuctionPage() {
 
   //경매 입찰 샌드 함수
   const onClickBidSend = (values) => {
-    var data = {
+    let data = {
       livePostId: parseInt(id),
       sender: user.id,
       price: parseInt(values),
@@ -198,7 +209,7 @@ function LiveAuctionPage() {
   function showMessageLog(e) {
     space = document.getElementById("chat-content-log");
     let receivedBox = document.createElement("div");
-    receivedBox.innerHTML = `<li><span>${e}</span></li>`;
+    receivedBox.innerHTML = `<li><span>${e.message}</span></li>`;
     space.append(receivedBox);
     space.scrollTop = space.scrollHeight;
   }
@@ -226,23 +237,28 @@ function LiveAuctionPage() {
         console.error(error);
       });
   };
-  if (product.startType !== 0 && count === 1) {
-    deadline =
-      new Date(product.auctionStartDate).getTime() +
-      1.6 * 60 * 60 * 24 * 2 +
-      1000 * 24;
-  }
 
   function onFinish() {
     axios
       .get(`${API_URL}/live-auction/end/${id}`, config)
       .then((result) => {
         //end되면 실행될 부분
+        console.log(result.data);
       })
       .catch((error) => {
-        message.error(error);
+        console.error(error);
       });
   }
+
+  const autoBidding = () => {
+    let price = product.minBidUnit + product.bid;
+    let data = {
+      livePostId: parseInt(id),
+      sender: user.id,
+      price: price,
+    };
+    stompClient.send("/app/live/bidding/send", {}, JSON.stringify(data));
+  };
 
   setTimeout(() => {
     setCount1(count1 + 1);
@@ -319,7 +335,7 @@ function LiveAuctionPage() {
                   className="second-button"
                   type="primary"
                   size="large"
-                  onClick=""
+                  onClick={autoBidding}
                 >
                   자동입찰
                 </Button>

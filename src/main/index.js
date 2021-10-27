@@ -50,8 +50,8 @@ function MainPage() {
 
   if (products === null || liveproducts === null) {
     return (
-      <div id="spin-spin">
         <Space size="middle">
+      <div id="spin-spin">
           <Spin size="small" />
           <Spin />
           <Spin size="large" />
@@ -79,7 +79,7 @@ function MainPage() {
         {liveproducts.map(function (product, index) {
           return (
             <div className="product-card">
-              {product.endType === 0 ? (
+              {product.endType === 1 ? (
                 <Link className="product-link" to={`/`}>
                   <div className="product-blur">
                     <img id="sold-out" src="./images/icons/sold-out.png" />
