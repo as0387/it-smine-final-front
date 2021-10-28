@@ -289,6 +289,7 @@ function LiveAuctionPage() {
                 title="남은시간"
                 value={deadline}
                 onFinish={onFinish}
+                valueStyle={{ fontSize: 70 }}
               />
             </Col>
             <div id="descriptions">
