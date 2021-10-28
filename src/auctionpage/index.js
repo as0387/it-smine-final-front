@@ -76,7 +76,7 @@ function LiveAuctionPage() {
           console.log(result.data);
           setProduct(result.data);
           if (product.startType !== 0) {
-            deadline = new Date(product.auctionStartDate).getTime() + 10 * 1000;
+            deadline = new Date(product.auctionStartDate).getTime() + 90 * 1000;
           }
         })
         .catch((error) => {
