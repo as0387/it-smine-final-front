@@ -89,7 +89,7 @@ function AuctionUpload() {
       .post(`${API_URL}/live-auction/new`, formData, config)
       .then((result) => {
         console.log(result);
-        fileIdList = [];
+
         history.replace(`/liveauctionpage/${result.data}`);
       })
       .catch((error) => {
