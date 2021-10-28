@@ -55,6 +55,11 @@ function LiveAuctionPage() {
   };
   React.useEffect(
     function () {
+      let jwtTokenTemp = localStorage.getItem("Authorization");
+      if (jwtTokenTemp === null) {
+        message.error("로그인 후 이용가능합니다!");
+        history.push("/login");
+      }
       axios
         .get(`${API_URL}/user-info`, config)
         .then((result) => {

@@ -8,6 +8,8 @@ import { Spin, Space, Form, Button, Input } from "antd";
 import {} from "react-bootstrap";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import jquery from "jquery";
+import $ from "jquery";
 
 var chatroomid;
 var opponentUserName;
@@ -74,6 +76,15 @@ function ChatPage() {
   const [user, setUser] = useState();
   const [chats, setChat] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [text, setText] = useState("");
+
+  const onChange = (e) => {
+    setText(e.target.value);
+    onReset();
+  };
+  const onReset = () => {
+    setText("");
+  };
 
   React.useEffect(function () {
     axios
@@ -190,10 +201,18 @@ function ChatPage() {
                       id="message-input"
                       size="large"
                       placeholder="메세지를 입력해주세요."
+                      onChange={onChange}
+                      value={text}
                     ></Input>
                   </Form.Item>
                   <Form.Item>
-                    <Button id="submit" type="primary" size="large" htmlType>
+                    <Button
+                      value={text}
+                      id="submit"
+                      type="primary"
+                      size="large"
+                      htmlType
+                    >
                       전송
                     </Button>
                   </Form.Item>
