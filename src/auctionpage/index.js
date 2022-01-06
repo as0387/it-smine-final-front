@@ -40,6 +40,7 @@ function LiveAuctionPage() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
   const [count1, setCount1] = useState(0);
+  const history = useHistory();
 
   var userName;
   const goBack = () => {
@@ -54,6 +55,11 @@ function LiveAuctionPage() {
   };
   React.useEffect(
     function () {
+      let jwtTokenTemp = localStorage.getItem("Authorization");
+      if (jwtTokenTemp === null) {
+        message.error("로그인 후 이용가능합니다!");
+        history.push("/login");
+      }
       axios
         .get(`${API_URL}/user-info`, config)
         .then((result) => {
@@ -70,10 +76,7 @@ function LiveAuctionPage() {
           console.log(result.data);
           setProduct(result.data);
           if (product.startType !== 0) {
-            deadline =
-              new Date(product.auctionStartDate).getTime() +
-              1 * 60 * 60 * 24 * 2 +
-              1000 * 24;
+            deadline = new Date(product.auctionStartDate).getTime() + 90 * 1000;
           }
         })
         .catch((error) => {
@@ -149,6 +152,7 @@ function LiveAuctionPage() {
       sender: userName,
       message: values.message,
     };
+    fnReset();
     if (stompClient != null) {
       stompClient.send("/app/live/send", {}, JSON.stringify(data));
       showMessageRight(data);
@@ -243,6 +247,8 @@ function LiveAuctionPage() {
       .then((result) => {
         //end되면 실행될 부분
         console.log(result.data);
+        clearTimeout(stime);
+        window.location.href = `/endpage/${id}`;
       })
       .catch((error) => {
         console.error(error);
@@ -259,11 +265,14 @@ function LiveAuctionPage() {
     stompClient.send("/app/live/bidding/send", {}, JSON.stringify(data));
   };
 
-  setTimeout(() => {
+  var stime = setTimeout(() => {
     setCount1(count1 + 1);
   }, 3000);
   connect();
 
+  function fnReset() {
+    $("#input2").val("");
+  }
   return (
     <div>
       <div className="product-container">
@@ -280,12 +289,14 @@ function LiveAuctionPage() {
                 title="남은시간"
                 value={deadline}
                 onFinish={onFinish}
+                valueStyle={{ fontSize: 70 }}
               />
             </Col>
             <div id="descriptions">
               <h5>상품명: {product.title}</h5>
-              <h5>시작가격: {product.bid}</h5>
+              <h5>현재가격: {product.bid}</h5>
               <h5>닉네임: {product.user.nickname}</h5>
+              <span>{product.minBidUnit}원 단위로 입찰해주세요!</span>
               <Divider className="dividers" />
               <h5>{product.description}</h5>
               <Divider className="dividers" />
@@ -304,7 +315,10 @@ function LiveAuctionPage() {
                 <h1>유력 낙찰자: {product.bidder.nickname}님</h1>
               </div>
             )}
-            🕒전광판은 3초마다 업데이트됩니다.....🕒
+            <div id="mupdate">
+              <span>🕒전광판은 3초마다 업데이트됩니다.....🕒</span>
+            </div>
+
             <Divider className="dividers" />
             <ul
               className="list-group chat-contenttt"
@@ -343,7 +357,9 @@ function LiveAuctionPage() {
                 <Divider className="dividers" />
               </div>
             ) : (
-              <h1>경매 준비 중</h1>
+              <div id="auctionBoard">
+                <h1>경매 준비 중</h1>
+              </div>
             )}
           </Col>
           <Col className="gutter-row" id="third-row" span={7}>
@@ -357,6 +373,7 @@ function LiveAuctionPage() {
                 <Form onFinish={onClickChatSend}>
                   <Form.Item name="message">
                     <Input
+                      id="input2"
                       size="large"
                       placeholder="메세지를 입력해주세요."
                     ></Input>

@@ -84,10 +84,10 @@
     margin-right: 1000px;
   }
   #second-row h3 {
-    width: 380px;
+    width: 340px;
   }
   #auctionBoard {
-    width: 380px;
+    width: 340px;
   }
   #third-row {
     margin-right: 1000px;
@@ -107,14 +107,14 @@
     overflow-y: scroll;
     padding: 10px;
     border: 1px solid gainsboro;
-    margin-left: 43px;
+    margin-left: 23px;
   }
   #message {
-    margin-left: 43px;
+    margin-left: 23px;
     width: 300px;
   }
   #submit-2 {
-    margin-left: 43px;
+    margin-left: 23px;
     width: 300px;
   }
   #des-container {
@@ -126,25 +126,32 @@
     overflow-y: scroll;
     padding: 10px;
     border: 1px solid gainsboro;
-    margin-left: 43px;
+    margin-left: 23px;
     margin-bottom: 10px;
   }
   #first--Button {
-    margin-left: 43px;
+    margin-left: 23px;
     width: 300px;
     margin-top: 2px;
   }
   #search {
-    margin-left: 43px;
+    margin-left: 23px;
     width: 242px;
   }
 
   #third-button {
-    margin-left: 43px;
+    margin-left: 23px;
     width: 300px;
     margin-top: 54px;
   }
   .dividers {
     width: 380px;
+  }
+  #mupdate {
+    width: 340px;
+  }
+  #input2 {
+    margin-left: 23px;
+    width: 300px;
   }
 }

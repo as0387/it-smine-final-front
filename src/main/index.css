@@ -110,17 +110,23 @@
   #liveicon {
     width: 150px;
     height: 75px;
-    margin-left: 90px;
+    margin-left: 95px;
     margin-bottom: 20px;
   }
   #product-headline {
-    width: 150px;
-    height: 75px;
     font-size: 40px;
-    margin-left: 100px;
+    margin-left: 104px;
   }
   #product-button {
     border: none;
     box-shadow: none;
+  }
+  #sold-out {
+    width: 100px;
+    margin-left: 30px;
+    margin-top: 100px;
+  }
+  .product-card {
+    margin-left: 2.5px;
   }
 }

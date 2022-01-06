@@ -56,6 +56,7 @@ function UploadPage() {
       .post(`${API_URL}/nomalAuctionPost`, formData, config)
       .then((result) => {
         console.log(result);
+        fileIdList = [];
         history.replace("/");
       })
       .catch((error) => {
